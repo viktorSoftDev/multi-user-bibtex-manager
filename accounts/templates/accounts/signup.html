@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load material_form %}
+
+{% block content %}
+<div class="container">
+  <h1 class="text-align center">Sign Up</h1>
+  <h4 class="text-align center">Fill in the form below to register</h4>
+
+  <form class="viewform" method="POST">
+    {% csrf_token %}
+    {% form form=form %} {% endform %}
+    <button type="submit" name="_submit" class="btn">Submit</button>
+  </form>
+
+</div>
+
+{% endblock %}

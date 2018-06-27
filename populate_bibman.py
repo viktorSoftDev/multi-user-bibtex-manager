@@ -6,8 +6,10 @@ django.setup()
 
 ## FAKE POP SCRIPT
 import random
-from bibman.models import Record, Project, Author
-from django.contrib.auth.models import User
+from projects.models import Project
+from accounts.models import User
+from records import record
+
 from faker import Faker
 
 fakegen = Faker()
