@@ -6,7 +6,7 @@ app_name = 'projects'
 
 urlpatterns = [
     path('', views.ListProjects.as_view(), name='all'),
-    path('new/', views.CreateProject.as_view(),'create'),
+    path('new/', views.CreateProject.as_view(),name='create'),
     re_path(r'^records/in/(?P<slug>[-\w]+)/$', views.SingleProject.as_view(),name='single'),
     re_path(r'^leave/(?P<slug>[-\w]+)/$', views.LeaveProject.as_view(),name='leave'),
     # join

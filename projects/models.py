@@ -18,12 +18,23 @@ register = template.Library()
 class Project(models.Model):
     project_title = models.CharField(max_length=200)
     description = models.TextField(max_length=500, blank=True)
+    slug = models.SlugField(allow_unicode=True, unique=True)
     # Users could later be split up in RO_users and
     # RW_users for different permissions
     members = models.ManyToManyField(User, through="ProjectMember")
 
     def __str__(self):
-     return self.project_title
+        return self.project_title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.project_title)
+        super().save(*args,**kwargs)
+
+    def get_absolute_url(self):
+        return reverse('projects:single',kwargs={'slug':self.slug})
+
+    class Meta:
+        ordering = ['project_title']
 
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE)
@@ -31,3 +42,6 @@ class ProjectMember(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        unique_together = ('project', 'user')

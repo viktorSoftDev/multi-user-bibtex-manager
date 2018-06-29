@@ -4,6 +4,8 @@
 {% block content %}
 <div class="container">
   <h1 class="center-align">Log In</h1>
+  <h4 class="center-align">Fill in your email and password to Log in. <br>
+                          Not yet a member? <a href="{% url 'accounts:signup' %}">Sign Up</a> now!</h4>
 
   <form method="POST">
     {% csrf_token %}

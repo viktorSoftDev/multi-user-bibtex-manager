@@ -6,13 +6,28 @@
     <p>Manage your projects here</p>
 
     <div class="">
-      <a href="{% url 'project:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
+      <a href="{% url 'projects:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
     </div>
 
 {% endblock %}
 
 {% block project_content %}
+<div class="list_project">
+    {% for project in object_list  %}
+      <a class="list-project-item" href="{% url 'projects:single' slug=project.slug %}">
+        <h3 class="title list-project-item-heading">{{ project.project_title }}</h3>
+        <div class="list-project-item-text container-fluid">
+            {{ project.description }}
 
+            <span class="badge">{{ project.members.count }}</span>
+            member{{ project.members.count|pluralize }}
+        </div>
+        <span class="badge">{{ project.records.count }}</span>
+        record{{ project.records.count|pluralize }}
+      </a>
+
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block postproject %}

@@ -6,7 +6,7 @@
 
 <form class="" action="{% url 'projects:create' %}" method="POST" id="projectForm">
   {% csrf_token %}
-  {% form %}
+  {% form %}{% endform %}
   <div class="center-align">
     <button type="submit" name="_submit" class="btn btn-large waves waves-effect">Sign Up</button>
   </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.ursl import reverse
+from django.urls import reverse
 from django.views import generic
 from projects.models import Project, ProjectMember
 from django.shortcuts import get_object_or_404
@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import (LoginRequiredMixin,
 
 
 class CreateProject(LoginRequiredMixin, generic.CreateView):
-    fields = ('project_title','description','members')
+    fields = ('project_title','description')
     model = Project
 
 class SingleProject(LoginRequiredMixin, generic.DetailView):
