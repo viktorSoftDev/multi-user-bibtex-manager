@@ -1,0 +1,20 @@
+{% extends "projects/project_base.html" %}
+
+{% block preproject %}
+
+    <h2>My Projects</h2>
+    <p>Manage your projects here</p>
+
+    <div class="">
+      <a href="{% url 'project:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
+    </div>
+
+{% endblock %}
+
+{% block project_content %}
+
+{% endblock %}
+
+{% block postproject %}
+
+{% endblock %}

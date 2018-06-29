@@ -3,12 +3,17 @@
 
 {% block content %}
 <div class="container">
-  <h1>Log in</h1>
+  <h1 class="center-align">Log In</h1>
 
   <form method="POST">
     {% csrf_token %}
-    {% form %}{% endform %}
-    <input type="submit" class="btn btn-primary" value="Log in">
+    {% form %}
+    {% part form.username prefix %}<i class="material-icons prefix">account_circle</i>{% endpart %}
+    {% part form.password prefix %}<i class="material-icons prefix">lock_outline</i>{% endpart %}
+    {% endform %}
+    <div class="center-align">
+      <button type="submit" name="_submit" class="btn btn-large center waves waves-effect">Log In</button>
+    </div>
   </form>
 
 </div>
