@@ -9,15 +9,15 @@ class GeneralRecordForm(forms.ModelForm):
 
     class Meta:
         model = Record
+        fields = ['entry_type']
 
-    def __init__(self, *args, **kwargs):
+    def update_fields(self,*args,**kwargs):
         entry_type = kwargs.pop('entry_type')
-        super(GeneralRecordForm, self).__init__(*args, **kwargs)
 
-        """
-        fields =  ENTRY_TYPES("entry_type")[0] + ENTRY_TYPES("entry_type")[1]
-        """
+        self.fields += ENTRY_TYPES[entry_type][0] + ENTRY_TYPES[entry_type][1]
 
+        for fieldname in ENTRY_TYPES[entry_type][0]:
+            self.fields[fieldname].required = True
 
-        for fieldname in ENTRY_TYPES("entry_type"):
-            pass
+        for fieldname in ENTRY_TYPES[entry_type][1]:
+            self.fields[fieldname].required = False

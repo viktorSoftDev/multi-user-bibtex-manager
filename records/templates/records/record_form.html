@@ -1,0 +1,32 @@
+{% extends "records/record_base.html" %}
+{% load material_form %}
+{% block record_content %}
+  <h1>Add new Record!</h1>
+
+  <!-- Here comes the entry form -->
+  <form id="record_form" class="" action="{% url 'records:create' %}" method="POST">
+    {% csrf_token %}
+    {% form %}{% endform %}
+
+  </form>
+{% endblock %}
+
+<script type="text/javascript">
+
+    function display_specific_form(){
+      $form=$('#record_form');
+      var datastring = $form.serialize();
+      $.ajax({
+        url: $form.attr('action'),
+        type: 'POST',
+        dataType: 'html',
+        data: datastring,
+        success: function(result){
+          $('#redord_form').html(success) //result instead of success shoud
+        }
+
+      });
+      // don't wanna submit the form
+      return false;
+    }
+</script>

@@ -6,6 +6,7 @@ from datetime import datetime
 # Create your models here.
 
 from projects.models import Project
+from records.choices import *
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -19,7 +20,7 @@ class Record(models.Model):
     Records and other models.
     """
 
-    entry_type =    models.CharField(max_length=64)
+    entry_type =    models.CharField(max_length=64, choices=ENTRY_TYPE_CHOICES)
     cite_key =      models.CharField(max_length=128, blank=True, null=True)
     ############ All entry fields : #############
 

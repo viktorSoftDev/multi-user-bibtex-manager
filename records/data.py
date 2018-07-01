@@ -6,22 +6,6 @@ The information has been gathered from:
 http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php
 
 """
-ENTRY_TYPES = {
-    "article":ARTICLE_FIELDS,
-    "book":BOOK_FIELDS,
-    "booklet":BOOKLET_FIELDS,
-    "conference":CONFERENCE_FIELDS,
-    "inbook":INBOOK_FIELDS,
-    "incollections":INCOLLECTIONS_FIELDS,
-    "inproceedings":INPROCEEDINGS_FIELDS,
-    "manual":MANUAL_FIELDS,
-    "mastersthesis":MASTERSTHESIS_FIELDS,
-    "misc":MISC_FIELDS,
-    "phdthesis":PHDTHESIS_FIELDS,
-    "proceedings":PROCEEDINGS_FIELDS,
-    "techreport":TECHREPORT_FIELDS,
-    "unpublished":UNPUBLISHED_FIELDS,
-}
 
 FIELDS = [
     "address",      #0
@@ -77,12 +61,12 @@ ARTICLE_FIELDS = [
 BOOK_FIELDS = [
     [
         "title",
-        "author,
+        "author",
         "editor",
         "publisher",
         "year",
     ],
-    OPTIONAL_FIELDS = [
+    [
         "volume",
         "number",
         "address",
@@ -106,6 +90,26 @@ BOOKLET_FIELDS = [
     ]
 ]
 
+CONFERENCE_FIELDS = [
+    [
+        "title",
+        "author",
+        "booktitle",
+        "year"
+    ],
+    [
+        "editor",
+        "volume",
+        "number",
+        "series",
+        "pages",
+        "address",
+        "month",
+        "organization",
+        "publisher",
+        "note"
+    ]
+]
 INBOOK_FIELDS =  [
     [
         "author",
@@ -276,3 +280,20 @@ UNPUBLISHED_FIELDS = [
         "year"
     ]
 ]
+
+ENTRY_TYPES = {
+    "article":ARTICLE_FIELDS,
+    "book":BOOK_FIELDS,
+    "booklet":BOOKLET_FIELDS,
+    "conference":CONFERENCE_FIELDS,
+    "inbook":INBOOK_FIELDS,
+    "incollections":INCOLLECTIONS_FIELDS,
+    "inproceedings":INPROCEEDINGS_FIELDS,
+    "manual":MANUAL_FIELDS,
+    "mastersthesis":MASTERSTHESIS_FIELDS,
+    "misc":MISC_FIELDS,
+    "phdthesis":PHDTHESIS_FIELDS,
+    "proceedings":PROCEEDINGS_FIELDS,
+    "techreport":TECHREPORT_FIELDS,
+    "unpublished":UNPUBLISHED_FIELDS,
+}

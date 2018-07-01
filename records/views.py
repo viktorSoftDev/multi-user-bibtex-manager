@@ -15,7 +15,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class RecordList(SelectRelatedMixin, generic.ListView):
+class RecordList(LoginRequiredMixin,SelectRelatedMixin, generic.ListView):
     model = models.Record
     select_related = ('user', 'project')
 
@@ -36,3 +36,9 @@ class ProjectRecords(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['record_project'] = self.record_project
         return context
+
+
+
+class CreateRecord(LoginRequiredMixin,generic.CreateView):
+    model = models.Record
+    fields = ['entry_type']
