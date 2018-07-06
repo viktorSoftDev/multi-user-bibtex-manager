@@ -3,21 +3,27 @@ from django import forms
 from records.models import Record
 from records.data import *
 from records.choices import *
-
+from records.form_layouts import *
 
 class GeneralRecordForm(forms.ModelForm):
-
     class Meta:
         model = Record
-        fields = ['entry_type']
+        fields = ["entry_type", "cite_key"]
 
-    def update_fields(self,*args,**kwargs):
-        entry_type = kwargs.pop('entry_type')
+    
 
-        self.fields += ENTRY_TYPES[entry_type][0] + ENTRY_TYPES[entry_type][1]
+class SpecificRecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        exclude = ['entry_type', 'cite_key']
 
-        for fieldname in ENTRY_TYPES[entry_type][0]:
-            self.fields[fieldname].required = True
+    def __init__(self,*args,**kwargs):
+        entry = kwargs.pop('entry')
+        super().__init__(*args,**kwargs)
+        for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
+            self.fields[fieldname] = forms.CharField(required=True)
 
-        for fieldname in ENTRY_TYPES[entry_type][1]:
-            self.fields[fieldname].required = False
+        for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
+            self.fields[fieldname] = forms.CharField(required=False)
+
+        self.layout = FORM_LAYOUT[entry]

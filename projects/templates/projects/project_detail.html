@@ -8,6 +8,7 @@
   <!-- button to leave project  -->
 </div>
 
+<a href="{% url 'projects:records:create' slug=object.slug %}" class="btn btn-medium waves waves-effect">Add Entry</a>
 {% endblock %}
 
 {% block project_content %}

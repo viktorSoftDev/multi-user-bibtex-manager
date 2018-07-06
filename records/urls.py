@@ -4,5 +4,6 @@ from . import views
 app_name = 'records'
 
 urlpatterns = [
-    path('new/', views.CreateRecord.as_view(), name='create'),
+    path('new/', views.create_record, name='create'),
+    path('specific-form-ajax/<str:entry>/',views.specific_form_ajax, name='specific-form-ajax'),
 ]

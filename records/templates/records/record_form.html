@@ -1,32 +1,49 @@
 {% extends "records/record_base.html" %}
 {% load material_form %}
 {% block record_content %}
-  <h1>Add new Record!</h1>
 
+  <h5>Add record to {{ project }}</h5>
   <!-- Here comes the entry form -->
-  <form id="record_form" class="" action="{% url 'records:create' %}" method="POST">
+  <form id="record_form" class="" action="{% url 'projects:records:create' slug=project_slug %}" method="POST">
     {% csrf_token %}
-    {% form %}{% endform %}
+    {% form form=form1 %}{% endform %}
+    <div id="form2div">
 
-  </form>
-{% endblock %}
+    </div>
 
-<script type="text/javascript">
+    <div class="center-align">
+      <button type="submit" name="_submit" class="btn btn-large waves waves-effect">ADD RECORD</button>
+    </div>
+    </form>
 
-    function display_specific_form(){
-      $form=$('#record_form');
-      var datastring = $form.serialize();
-      $.ajax({
-        url: $form.attr('action'),
-        type: 'POST',
-        dataType: 'html',
-        data: datastring,
-        success: function(result){
-          $('#redord_form').html(success) //result instead of success shoud
-        }
 
-      });
-      // don't wanna submit the form
-      return false;
+
+    <script>
+    var form_urls ={
+        'article' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='article' %}",
+        'book' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='book' %}",
+        'booklet' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='booklet' %}",
+        'conference' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='conference' %}",
+        'inbook' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='inbook' %}",
+        'incollections' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='incollections' %}",
+        'inproceedings' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='inproceedings' %}",
+        'manual' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='manual' %}",
+        'mastersthesis' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='mastersthesis' %}",
+        'misc' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='misc' %}",
+        'phdthesis' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='phdthesis' %}",
+        'proceedings' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='proceedings' %}",
+        'techreport' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='techreport' %}",
+        'unpublished' : "{% url 'projects:records:specific-form-ajax' slug=project_slug entry='unpublished' %}",
     }
-</script>
+      $(document).ready(function(){
+        $('#id_entry_type').change( function(event){
+            $.get({'url': form_urls[$(this).val()]}).done( function(data) {
+                    document.getElementById('form2div').innerHTML = data;
+            });
+        });
+      });
+    </script>
+
+
+
+{% endblock %}

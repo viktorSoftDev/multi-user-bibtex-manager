@@ -8,9 +8,11 @@
 
       {% endblock %}
     </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     {% include 'material/includes/material_css.html' %}
-       <script src="{% static 'material/js/jquery.js' %}"></script>
    {% include 'material/includes/material_js.html' %}
+
       <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -48,29 +50,38 @@
     </nav>
 
 
+    <div class="row">
+
+          <div class="col s12 m4 l3">
+            <!-- navigation panel-->
+
+          </div>
+
+          <div class="col s12 m6 l7"> <!-- Note that "m8 l9" was added -->
+            <!-- page content -->
+            <div class="">
+              BreadCrumbs
+            </div>
+            <div class="">
+                {% block content %}{% endblock %}
+            </div>
+
+          </div>
+
+          <div class="col s12 m2 l2">
+            <!-- right side content  -->
+          {% block content_right %}{% endblock %}
+          </div>
+
+        </div>
 
 
-
-
-
-
-    <div class="container">
-      <!-- Body block for page-specific content  -->
-      {% block content %}
-
-      {% endblock %}
-    </div>
 
     <!--JavaScript at end of body for optimized loading-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 
     <script>
 
-
-
-      // $(document).ready(function(){
-      //   $('.button-collapse').sideNav();
-      // });
     </script>
   </body>
 </html>

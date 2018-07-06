@@ -7,7 +7,7 @@ http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php
 
 """
 
-FIELDS = [
+FIELDS = {
     "address",      #0
     "annote",       #1
     "author",       #2
@@ -34,7 +34,7 @@ FIELDS = [
     "volume",       #23
     "year",         #24
 
-]
+}
 
 """
 Here follows the specific fields that are required and optional
@@ -282,6 +282,23 @@ UNPUBLISHED_FIELDS = [
 ]
 
 ENTRY_TYPES = {
+    1:"article",
+    2:"book",
+    3:"booklet",
+    4:"conference",
+    5:"inbook",
+    6:"incollections",
+    7:"inproceedings",
+    8:"manual",
+    9:"mastersthesis",
+    10:"misc",
+    11:"phdthesis",
+    12:"proceedings",
+    13:"techreport",
+    14:"unpublished",
+}
+
+ENTRY_TYPE_FIELDS = {
     "article":ARTICLE_FIELDS,
     "book":BOOK_FIELDS,
     "booklet":BOOKLET_FIELDS,

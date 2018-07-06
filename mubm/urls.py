@@ -25,5 +25,5 @@ urlpatterns = [
     path('test/', views.TestPage.as_view(),name='test'),
     path('thanks/', views.ThanksPage.as_view(), name='thanks'),
     path('projects/', include('projects.urls', namespace='projects')),
-    path('records/', include('records.urls', namespace='records')),
+    
 ]

@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib import messages
 from braces.views import SelectRelatedMixin
+from django.forms import modelform_factory, formset_factory
+from records.data import *
 # Create your views here.
 
 
@@ -39,6 +41,24 @@ class ProjectRecords(generic.ListView):
 
 
 
-class CreateRecord(LoginRequiredMixin,generic.CreateView):
-    model = models.Record
-    fields = ['entry_type']
+def create_record(request, slug):
+    form1 = forms.GeneralRecordForm(request.POST or None)
+    context = {
+        'form1':form1,
+        'slugs':['article'],
+        'project_slug': slug,
+        'project':get_object_or_404(models.Project, slug=slug).project_title,
+        }
+    if request.method == 'POST':
+        print("post")
+        
+    return render(request, 'records/record_form.html', context)
+
+def specific_form_ajax(request, slug, entry):
+    print(entry)
+    entry = entry
+
+    context = {'form':forms.SpecificRecordForm(request.POST or None, entry=entry)}
+    template = 'records/form_ajax.html'
+
+    return render(request, template, context)

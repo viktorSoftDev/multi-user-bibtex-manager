@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
 
 app_name = 'projects'
@@ -7,8 +7,9 @@ app_name = 'projects'
 urlpatterns = [
     path('', views.ListProjects.as_view(), name='all'),
     path('new/', views.CreateProject.as_view(),name='create'),
-    re_path(r'^records/in/(?P<slug>[-\w]+)/$', views.SingleProject.as_view(),name='single'),
-    re_path(r'^leave/(?P<slug>[-\w]+)/$', views.LeaveProject.as_view(),name='leave'),
+    path('<slug:slug>/records/', include('records.urls', namespace='records')),
+    path('<slug:slug>/', views.SingleProject.as_view(),name='single'),
+    path('leave/<slug:slug>/', views.LeaveProject.as_view(),name='leave'),
     # join
     # invite
 ]
