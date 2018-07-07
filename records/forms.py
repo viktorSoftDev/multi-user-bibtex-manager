@@ -10,8 +10,6 @@ class GeneralRecordForm(forms.ModelForm):
         model = Record
         fields = ["entry_type", "cite_key"]
 
-    
-
 class SpecificRecordForm(forms.ModelForm):
     class Meta:
         model = Record
@@ -27,3 +25,8 @@ class SpecificRecordForm(forms.ModelForm):
             self.fields[fieldname] = forms.CharField(required=False)
 
         self.layout = FORM_LAYOUT[entry]
+
+class SaveRecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = '__all__'

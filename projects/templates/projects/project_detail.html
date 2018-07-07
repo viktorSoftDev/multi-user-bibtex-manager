@@ -1,5 +1,8 @@
 {% extends "projects/project_base.html" %}
-
+{% block breadcrumb %}
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+<a href="{% url 'projects:single' slug=object.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+{% endblock %}
 {% block preproject %}
 <h1>{{ project.project_title }}</h1>
 <!-- Maybe some information about collaborative or not -->
@@ -16,6 +19,15 @@
 <div class="">
 
 </div>
+
+
+      <div class="collection with-header">
+        <span class="collection-header grey-text"><h2>Title</h2></span>
+        <a href="#!" class="collection-item">Alvin</a>
+        <a href="#!" class="collection-item">Alvin</a>
+        <a href="#!" class="collection-item">Alvin</a>
+        <a href="#!" class="collection-item">Alvin</a>
+      </div>
 <!-- Here should the records be -->
 
 <!-- {% include "records/_record.html" %} -->

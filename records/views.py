@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, get_object_or_404
+from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
@@ -42,23 +42,29 @@ class ProjectRecords(generic.ListView):
 
 
 def create_record(request, slug):
-    form1 = forms.GeneralRecordForm(request.POST or None)
+
+    project = get_object_or_404(models.Project, slug=slug)
+    if request.method == 'POST':
+        form = forms.SaveRecordForm(request.POST)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.project = project
+            record.save()
+            return redirect('projects:single', slug)
+    else:
+        form1 = forms.GeneralRecordForm()
     context = {
         'form1':form1,
-        'slugs':['article'],
-        'project_slug': slug,
-        'project':get_object_or_404(models.Project, slug=slug).project_title,
+        'project_slug':slug,
+        'project':project,
         }
-    if request.method == 'POST':
-        print("post")
-        
     return render(request, 'records/record_form.html', context)
 
 def specific_form_ajax(request, slug, entry):
     print(entry)
     entry = entry
-
-    context = {'form':forms.SpecificRecordForm(request.POST or None, entry=entry)}
+    form = forms.SpecificRecordForm(entry=entry)
+    context = {'form':form}
     template = 'records/form_ajax.html'
 
     return render(request, template, context)

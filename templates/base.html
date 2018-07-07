@@ -21,7 +21,7 @@
   <body>
 
     <!-- Navbar for all pages -->
-    <nav class="teal darken-1">
+    <nav class="grey darken-2">
       <div class="nav-wrapper">
         <div class="container">
           <a href="{% url 'home' %}" class="brand-logo center">Multi-User BibTeX Manager</a>
@@ -49,6 +49,7 @@
       </div>
     </nav>
 
+    {% block content_account %}{% endblock %}
 
     <div class="row">
 
@@ -59,9 +60,17 @@
 
           <div class="col s12 m6 l7"> <!-- Note that "m8 l9" was added -->
             <!-- page content -->
-            <div class="">
-              BreadCrumbs
-            </div>
+            {% if user.is_authenticated %}
+
+              <nav class="grey darken-3 my-breadcrumb">
+                 <div class="nav-wrapper">
+                   <div class="col s12">
+                     <a href="{% url 'home' %}" class="breadcrumb">Home</a>
+                      {% block breadcrumb %}{% endblock %}
+                   </div>
+                 </div>
+               </nav>
+            {% endif %}
             <div class="">
                 {% block content %}{% endblock %}
             </div>

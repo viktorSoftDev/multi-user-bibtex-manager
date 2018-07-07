@@ -1,20 +1,50 @@
 {% extends "base.html" %}
 {% load material_form %}
 
-{% block content %}
-<div class="container signup">
-  <h1 class="text-align center">Sign Up</h1>
-  <h4 class="text-align center">Fill in the form below to register</h4>
+{% block content_account %}
+<br>
+<div class="row">
+  <div class="col l8 m8 s12 offset-l2 offset-m2">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <span class="card-title"><h1 class="center-align">Sign Up</h1></span>
+        <h4 class="center-align hide-on-med-and-down">Fill in the form below to register. <br>
+                                Already a member? <a href="{% url 'accounts:login' %}">Log in</a> instead!</h4>
 
-  <form class="viewform" method="POST">
-    {% csrf_token %}
-    {% form form=form %} {% endform %}
-    <br>
-    <div class="center-align">
-      <button type="submit" name="_submit" class="btn btn-large center waves waves-effect">Sign Up</button>
 
+
+
+            <br>
+
+
+
+              <form class="viewform" method="POST">
+                {% csrf_token %}
+                {% form form=form %} {% endform %}
+                <br>
+                <div class="center-align">
+                  <button type="submit" name="_submit" class="btn btn-large center waves waves-effect">Sign Up</button>
+
+                </div>
+              </form>
+
+
+
+
+
+      </div>
     </div>
-  </form>
+  </div>
+
+</div>
+
+
+
+
+<div class="container signup">
+  <h1 class="text-align center"></h1>
+  <h4 class="text-align center"></h4>
+
 
 </div>
 

@@ -1,31 +1,84 @@
 {% extends "projects/project_base.html" %}
+{% block breadcrumb %}
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 
+{% endblock %}
 {% block preproject %}
+<br>
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
 
-    <h2>My Projects</h2>
-    <p>Manage your projects here</p>
 
-    <div class="">
-      <a href="{% url 'projects:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
+            <span class="card-title"><h2>My Projects</h2></span>
+            <p>Access your projects below or create a new one to get started!</p>
+            <br>
+
+            <div class="card-action">
+              <a href="{% url 'projects:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
+            </div>
+
+
+
+
+
+
+      </div>
     </div>
+  </div>
+
+</div>
+
+
 
 {% endblock %}
 
 {% block project_content %}
 <div class="list_project">
     {% for project in object_list  %}
-      <a class="list-project-item" href="{% url 'projects:single' slug=project.slug %}">
-        <h3 class="title list-project-item-heading">{{ project.project_title }}</h3>
-        <div class="list-project-item-text container-fluid">
-            {{ project.description }}
 
-            <span class="badge">{{ project.members.count }}</span>
-            member{{ project.members.count|pluralize }}
+      <div class="row">
+        <div class="col s12">
+          <div class="card hoverable blue-grey darken-1">
+
+              <div class="card-content white-text">
+                <span class="card-title">{{ project.project_title.upper }}</span>
+
+                <div class="row">
+                  <div class="col s6">
+                    <hr>
+                    <p>{{ project.description }}</p>
+                  </div>
+                  <div class="col s6">
+                    <span class="new badge" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
+                    <br>
+                    <br>
+                    <span class="new badge" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
+                  </div>
+                </div>
+
+              </div>
+              <div class="card-action">
+                <div class="row">
+                  <div class="col s6">
+                    <a href="{% url 'projects:single' slug=project.slug %}">View</a>
+                  </div>
+                  <div class="col s6">
+                    <div class="right-align">
+                      <a class="btn waves-effect waves-light red lighten-1" href="#">Delete</a>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+
+          </div>
         </div>
-        <span class="badge">{{ project.records.count }}</span>
-        record{{ project.records.count|pluralize }}
-      </a>
-
+      </div>
     {% endfor %}
 </div>
 {% endblock %}
