@@ -6,6 +6,7 @@ from django.http import Http404, JsonResponse
 from django.contrib import messages
 from braces.views import SelectRelatedMixin
 from django.forms import modelform_factory, formset_factory
+from django.core import serializers
 from records.data import *
 # Create your views here.
 
@@ -15,6 +16,18 @@ from . import forms
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+
+class RecordDetail(generic.DetailView):
+    model = models.Record
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        data = serializers.serialize("python", models.Record.objects.all())
+        context['data'] = data
+        return context
+
+
 
 
 class RecordList(LoginRequiredMixin,SelectRelatedMixin, generic.ListView):

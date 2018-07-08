@@ -20,16 +20,42 @@
 
 </div>
 
+<table class="highlight">
+       <thead>
+         <tr>
+             <th>Cite Key</th>
+             <th>Entry Type</th>
+             <th>Title</th>
+         </tr>
+       </thead>
 
-      <div class="collection with-header">
-        <span class="collection-header grey-text"><h2>Title</h2></span>
-        <a href="#!" class="collection-item">Alvin</a>
-        <a href="#!" class="collection-item">Alvin</a>
-        <a href="#!" class="collection-item">Alvin</a>
-        <a href="#!" class="collection-item">Alvin</a>
-      </div>
-<!-- Here should the records be -->
+       <tbody>
+         {% for record in project.records.all  %}
+         <!-- Here should the records be -->
 
-<!-- {% include "records/_record.html" %} -->
+         <!-- {% include "records/_record.html" %} -->
 
+
+           <tr class="clickable-row" data-href="#">
+
+               <td><a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a></td>
+               <td>{{ record.entry_type }}</td>
+               <td>{{ record.title }}</td>
+
+           </tr>
+
+         {% endfor %}
+
+       </tbody>
+     </table>
+
+
+<script>
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+
+</script>
 {% endblock %}

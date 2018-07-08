@@ -1,1 +1,31 @@
 {% extends "records/record_base.html" %}
+
+
+{% block record_content %}
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+
+      {% for instance in data %}
+        {% for field, value in instance.fields.items %}
+          <tr>
+          {% if value %}
+            <td>{{ field }}</td>
+            <td>{{ value }}</td>
+          {% endif %}
+          </tr>
+        {% endfor %}
+      {% endfor %}
+
+  </tbody>
+
+
+
+</table>
+
+{% endblock %}

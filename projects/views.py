@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from projects.models import Project, ProjectMember
 from django.shortcuts import get_object_or_404
@@ -40,3 +40,17 @@ class JoinProject(LoginRequiredMixin, generic.RedirectView):
 
 class LeaveProject(LoginRequiredMixin, generic.RedirectView):
     pass
+
+
+class DeleteProject(LoginRequiredMixin, generic.DeleteView):
+    model = Project
+
+    success_url = reverse_lazy('projects:all')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(members=self.request.user)
+
+    def delete(self, *args, **kwargs):
+        messages.success(self.request, 'Project Deleted')
+        return super().delete(*args,**kwargs)
