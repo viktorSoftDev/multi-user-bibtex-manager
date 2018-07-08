@@ -30,3 +30,19 @@ class SaveRecordForm(forms.ModelForm):
     class Meta:
         model = Record
         fields = '__all__'
+
+class ShowRecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        fields = ['entry_type', 'cite_key']
+
+    def __init__(self,*args,**kwargs):
+        entry = kwargs.pop('entry')
+        super().__init__(*args,**kwargs)
+        for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
+            self.fields[fieldname] = forms.CharField(required=True)
+
+        for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
+            self.fields[fieldname] = forms.CharField(required=False)
+
+        self.layout = FORM_LAYOUT[entry]

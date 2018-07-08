@@ -1,31 +1,16 @@
 {% extends "records/record_base.html" %}
-
-
+{% load material_form %}
 {% block record_content %}
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
 
-      {% for instance in data %}
-        {% for field, value in instance.fields.items %}
-          <tr>
-          {% if value %}
-            <td>{{ field }}</td>
-            <td>{{ value }}</td>
-          {% endif %}
-          </tr>
-        {% endfor %}
-      {% endfor %}
-
-  </tbody>
+<h4>Record: {{ record.title }}</h4>
 
 
 
-</table>
+
+{% for field in data %}
+
+ {% if field %} {{field}} {% endif %}
+
+{% endfor %}
 
 {% endblock %}

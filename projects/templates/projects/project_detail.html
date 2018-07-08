@@ -5,13 +5,15 @@
 {% endblock %}
 {% block preproject %}
 <h1>{{ project.project_title }}</h1>
-<!-- Maybe some information about collaborative or not -->
 
+<p>{{ project.description }}</p>
+<!-- Maybe some information about collaborative or not -->
+<hr>
 <div class="content">
   <!-- button to leave project  -->
 </div>
-
-<a href="{% url 'projects:records:create' slug=object.slug %}" class="btn btn-medium waves waves-effect">Add Entry</a>
+<h3 class="center-align">Records in {{ project.project_title }} </h3>
+<a href="{% url 'projects:records:create' slug=project.slug %}" class="btn btn-medium waves waves-effect right">Add Entry</a>
 {% endblock %}
 
 {% block project_content %}
@@ -26,6 +28,7 @@
              <th>Cite Key</th>
              <th>Entry Type</th>
              <th>Title</th>
+             <th class="right"></th>
          </tr>
        </thead>
 
@@ -42,6 +45,17 @@
                <td>{{ record.entry_type }}</td>
                <td>{{ record.title }}</td>
 
+               <td class="right">
+                 <a href="#!" class="grey-text">
+                   <i class="material-icons">edit</i>
+                 </a>
+                 <a href="#!" class="grey-text">
+                   <i class="material-icons">content_copy</i>
+                 </a>
+                 <a href="#!" class="grey-text">
+                   <i class="material-icons">delete</i>
+                 </a>
+               </td>
            </tr>
 
          {% endfor %}

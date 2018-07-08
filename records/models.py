@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.conf import Settings
 from datetime import datetime
+from django.utils.text import slugify
+
 # POST MODELS.PY
 # Create your models here.
 
@@ -67,6 +69,7 @@ class Record(models.Model):
     #############################################
 
 
+
     # A record belongs to a single project (to start with)
     project =       models.ForeignKey(Project, related_name='records', on_delete=models.SET_NULL, null=True, blank=True)
     # A record is made by a user, and is considered his/hers
@@ -87,13 +90,11 @@ class Record(models.Model):
 
     def save(self, *args,**kwargs):
         last_edited = datetime.now()
+
         super().save(*args,**kwargs)
-        pass
 
     def get_absolute_url(self):
-        return reverse('records:single',
-                        kwargs={'project': self.project.project_title,
-                                'pk':self.pk})
+        return reverse('projects:records:single',kwargs={'slug':self.project.slug, 'pk':self.pk})
 
 
     class Meta:
