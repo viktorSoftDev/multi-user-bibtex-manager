@@ -23,59 +23,59 @@ class Record(models.Model):
     """
 
     entry_type =    models.CharField(max_length=64, choices=ENTRY_TYPE_CHOICES)
-    cite_key =      models.CharField(max_length=128, blank=True, null=True)
+    cite_key =      models.CharField(max_length=128, null=True)
     ############ All entry fields : #############
 
-    title =         models.CharField(max_length=500, blank=True, null=True)
-    author =        models.CharField(max_length=500, blank=True, null=True)
-    journal =       models.CharField(max_length=500, blank=True, null=True) # aka journaltitle
-    year =          models.IntegerField(blank=True, null=True)
-    volume =        models.CharField(max_length=64, blank=True, null=True)
-    number =        models.IntegerField(blank=True, null=True)
-    pages =         models.CharField(max_length=64, blank=True, null=True)
-    month =         models.IntegerField(blank=True, null=True)
-    note =          models.CharField(max_length=256, blank=True, null=True)
+    title =         models.CharField(max_length=500, null=True)
+    author =        models.CharField(max_length=500, null=True)
+    journal =       models.CharField(max_length=500,null=True) # aka journaltitle
+    year =          models.IntegerField(null=True)
+    volume =        models.CharField(max_length=64, null=True)
+    number =        models.IntegerField(null=True)
+    pages =         models.CharField(max_length=64, null=True)
+    month =         models.IntegerField(null=True)
+    note =          models.CharField(max_length=256, null=True)
 
-    editor =        models.CharField(max_length=256, blank=True, null=True)
-    publisher =     models.CharField(max_length=256, blank=True, null=True)
-    series =        models.CharField(max_length=256, blank=True, null=True)
-    address =       models.CharField(max_length=500, blank=True, null=True)
-    edition =       models.IntegerField(blank=True, null=True)
-    isbn =          models.IntegerField(blank=True, null=True) # 10 or 13 digits
+    editor =        models.CharField(max_length=256, null=True)
+    publisher =     models.CharField(max_length=256, null=True)
+    series =        models.CharField(max_length=256, null=True)
+    address =       models.CharField(max_length=500, null=True)
+    edition =       models.IntegerField(null=True)
+    isbn =          models.IntegerField(null=True) # 10 or 13 digits
 
-    how_published = models.CharField(max_length=500, blank=True, null=True)
+    how_published = models.CharField(max_length=500, null=True)
 
-    chapter =       models.CharField(max_length=64, blank=True, null=True)
-    type =          models.CharField(max_length=128, blank=True, null=True)
+    chapter =       models.CharField(max_length=64, null=True)
+    type =          models.CharField(max_length=128, null=True)
 
-    booktitle =     models.CharField(max_length=500, blank=True, null=True)
+    booktitle =     models.CharField(max_length=500, null=True)
 
-    organisation =  models.CharField(max_length=500, blank=True, null=True)
+    organisation =  models.CharField(max_length=500, null=True)
 
-    school =        models.CharField(max_length=256, blank=True, null=True)
+    school =        models.CharField(max_length=256, null=True)
 
-    institution =   models.CharField(max_length=256, blank=True, null=True)
+    institution =   models.CharField(max_length=256, null=True)
 
-    date =          models.DateField(blank=True, null=True)
+    date =          models.DateField(null=True)
 
-    issn =          models.CharField(max_length=500, blank=True, null=True)
+    issn =          models.CharField(max_length=500, null=True)
 
-    subtitle =      models.CharField(max_length=500, blank=True, null=True)
+    subtitle =      models.CharField(max_length=500, null=True)
 
-    url =           models.URLField(blank=True, null=True)
-    urldate =       models.DateField(blank=True, null=True)
+    url =           models.URLField(null=True)
+    urldate =       models.DateField(null=True)
 
-    doi =           models.CharField(max_length=500, blank=True, null=True)
+    doi =           models.CharField(max_length=500, null=True)
     #############################################
 
 
 
     # A record belongs to a single project (to start with)
-    project =       models.ForeignKey(Project, related_name='records', on_delete=models.SET_NULL, null=True, blank=True)
+    project =       models.ForeignKey(Project, related_name='records', on_delete=models.SET_NULL, null=True)
     # A record is made by a user, and is considered his/hers
     # users = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
-    last_edited =   models.DateTimeField(default=datetime.now, blank=True)
+    last_edited =   models.DateTimeField(default=datetime.now)
 
     # def destroy(self):
     #     """

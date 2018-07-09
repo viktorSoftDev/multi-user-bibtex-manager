@@ -1,67 +1,160 @@
 {% extends "projects/project_base.html" %}
+
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
-<a href="{% url 'projects:single' slug=object.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
 {% endblock %}
-{% block preproject %}
-<h1>{{ project.project_title }}</h1>
 
-<p>{{ project.description }}</p>
-<!-- Maybe some information about collaborative or not -->
-<hr>
-<div class="content">
-  <!-- button to leave project  -->
-</div>
-<h3 class="center-align">Records in {{ project.project_title }} </h3>
-<a href="{% url 'projects:records:create' slug=project.slug %}" class="btn btn-medium waves waves-effect right">Add Entry</a>
-{% endblock %}
+
+{% block preproject %}{% endblock %}
 
 {% block project_content %}
+
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12">
+            <span class="card-title"><h2 class="left">{{ project.project_title }}</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <h5>Project shared with: <span class="">{{ project.members.user.first_name }}</span></h5>
+                </span>
+            <h5>Description:</h5>
+            <p>{{ project.description }}</p>
+            <div class="divider"></div>
+            <div class="section">
+              <a class="btn waves-effect btn-medium waves-light blue" href="#">
+                <i class="material-icons left">edit</i>
+                Edit Project
+              </a>
+              <a class="btn waves-effect waves-light red darken-3" href="#">
+                <i class="material-icons left">delete</i>
+                Delete Project
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="row">
+          <div class="col s12">
+
+
+
+        <div class="section">
+              <h3 class="left-align">Records in {{ project.project_title }} </h3>
+
+
+                <a href="{% url 'projects:records:create' slug=project.slug %}" class="btn waves-light waves-effect">
+                  <i class="material-icons left">add</i>
+                  Add Entry
+                </a>
+                <a href="#" class="btn waves-light waves-effect">
+                  <i class="material-icons left">file_upload</i>
+                  Import file
+                </a>
+                <a href="#" class="btn waves-light waves-effect right">
+                  <i class="material-icons left">file_download</i>
+                  Export Project
+                </a>
+
+
+
+        </div>
+        <div class="section">
+          <div class="row">
+            <div class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">search</i>
+                  <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search...">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <table class="highlight">
+                 <thead>
+                   <tr>
+                       <th>Cite Key</th>
+                       <th>Entry Type</th>
+                       <th>Title</th>
+                       <th class="right"></th>
+                   </tr>
+                 </thead>
+
+                 <tbody>
+                   {% for record in project.records.all  %}
+                     <tr class="clickable-row" data-href="#">
+
+                         <td><a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a></td>
+                         <td>{{ record.entry_type }}</td>
+                         <td>{{ record.title }}</td>
+
+                         <td class="right">
+                           <a href="#!" class="grey-text">
+                             <i class="material-icons">edit</i>
+                           </a>
+                           <a href="#!" class="grey-text">
+                             <i class="material-icons">content_copy</i>
+                           </a>
+                           <a href="#!" class="grey-text">
+                             <i class="material-icons">delete</i>
+                           </a>
+                         </td>
+                     </tr>
+
+                   {% endfor %}
+
+                 </tbody>
+               </table>
+
+
+
+
+        </div>
+          <div class="card-action">
+            <div class="left-align">
+
+
+          </div>
+            <div class="right-align">
+              <a class="btn waves-effect btn-medium waves-light blue" href="#">
+                <i class="material-icons left">edit</i>
+                Edit Project
+              </a>
+              <a class="btn waves-effect waves-light red darken-3" href="#">
+                <i class="material-icons left">delete</i>
+                Delete Project
+              </a>
+
+            </div>
+          </div>
+
+
+  </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+
+
 
 <div class="">
 
 </div>
 
-<table class="highlight">
-       <thead>
-         <tr>
-             <th>Cite Key</th>
-             <th>Entry Type</th>
-             <th>Title</th>
-             <th class="right"></th>
-         </tr>
-       </thead>
-
-       <tbody>
-         {% for record in project.records.all  %}
-         <!-- Here should the records be -->
-
-         <!-- {% include "records/_record.html" %} -->
-
-
-           <tr class="clickable-row" data-href="#">
-
-               <td><a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a></td>
-               <td>{{ record.entry_type }}</td>
-               <td>{{ record.title }}</td>
-
-               <td class="right">
-                 <a href="#!" class="grey-text">
-                   <i class="material-icons">edit</i>
-                 </a>
-                 <a href="#!" class="grey-text">
-                   <i class="material-icons">content_copy</i>
-                 </a>
-                 <a href="#!" class="grey-text">
-                   <i class="material-icons">delete</i>
-                 </a>
-               </td>
-           </tr>
-
-         {% endfor %}
-
-       </tbody>
-     </table>
 
 
 <script>

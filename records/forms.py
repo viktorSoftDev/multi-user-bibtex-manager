@@ -19,7 +19,8 @@ class SpecificRecordForm(forms.ModelForm):
         entry = kwargs.pop('entry')
         super().__init__(*args,**kwargs)
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
-            self.fields[fieldname] = forms.CharField(required=True)
+            self.fields[fieldname] = forms.CharField()
+            self.fields[fieldname].required = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
             self.fields[fieldname] = forms.CharField(required=False)

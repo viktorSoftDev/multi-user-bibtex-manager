@@ -23,7 +23,7 @@ class CreateProject(LoginRequiredMixin, generic.CreateView):
             user = self.request.user
             pm = ProjectMember.objects.get_or_create(project=project, user=user)[0]
             pm.save()
-            return redirect('projects:single', project.slug)
+            return redirect('projects:single', slug=project.slug)
 
 
 class SingleProject(LoginRequiredMixin, generic.DetailView):

@@ -38,21 +38,21 @@
 
       <div class="row">
         <div class="col s12">
-          <div class="card hoverable blue-grey darken-1">
+          <div class="card hoverable grey darken-1">
 
               <div class="card-content white-text">
-                <span class="card-title">{{ project.project_title.upper }}</span>
+                <span class="card-title">{{ project.project_title.upper }}
+                  <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
+                  <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
+                </span>
 
                 <div class="row">
-                  <div class="col s6">
+                  <div class="col s12">
                     <hr>
                     <p>{{ project.description }}</p>
-                  </div>
-                  <div class="col s6">
-                    <span class="new badge" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
+
                     <br>
                     <br>
-                    <span class="new badge" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
                   </div>
                 </div>
 
@@ -60,13 +60,21 @@
               <div class="card-action">
                 <div class="row">
                   <div class="col s6">
-                    <a href="{% url 'projects:single' slug=project.slug %}">View</a>
+                    <a class="btn waves-effect waves-light blue" href="{% url 'projects:single' slug=project.slug %}">
+                      <i class="material-icons left">visibility</i>
+                      View Project
+                    </a>
                   </div>
                   <div class="col s6">
                     <div class="right-align">
-                      <a class="btn waves-effect waves-light red lighten-1" href="{% url 'projects:delete' slug=project.slug %}">Delete</a>
+                      <a class="btn waves-effect waves-light red darken-3" href="{% url 'projects:delete' slug=project.slug %}">
+                        <i class="material-icons left">delete</i>
+                        Delete Project
+                      </a>
 
                     </div>
+
+
                   </div>
 
                 </div>

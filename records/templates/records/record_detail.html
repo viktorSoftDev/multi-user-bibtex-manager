@@ -2,15 +2,84 @@
 {% load material_form %}
 {% block record_content %}
 
-<h4>Record: {{ record.title }}</h4>
+
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12">
+            <span class="card-title"><h4 class="left">Record: {{ record.title }}</h4>
+            <br> <br>
+            <h6>Part of: <span class="chip">{{ project.project_title.capitalize }}</span></h6>
+            </span>
+          </div>
+
+
+
+        </div>
+
+        <div class="section">
+
+
+
+        <table>
+          <thead>
+            <tr>
+              <th class="" width="30%">Field</th>
+
+              <th width="80%">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for field in data %}
+              <tr>
+                <td class="" width="30%">
+                  {{field.label}}
+                </td>
+                <td>
+                  {% if field.data %}
+                    {{ field.data }}
+                  {% else %}
+                    <span class="grey-text">n/a</span>
+                  {% endif %}
+
+                </td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+</div>
+          <div class="card-action">
+            <div class="left-align">
+
+
+          </div>
+            <div class="right-align">
+              <a class="btn waves-effect btn-medium waves-light blue" href="#">
+                <i class="material-icons left">edit</i>
+                Edit
+              </a>
+              <a class="btn waves-effect waves-light red darken-3" href="#">
+                <i class="material-icons left">delete</i>
+                Delete
+              </a>
+
+            </div>
+          </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
 
-{% for field in data %}
 
- {% if field %} {{field}} {% endif %}
-
-{% endfor %}
 
 {% endblock %}

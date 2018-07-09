@@ -7,7 +7,9 @@ from django.contrib import messages
 from braces.views import SelectRelatedMixin
 from django.forms import modelform_factory, formset_factory
 from django.core import serializers
+from django.forms.models import model_to_dict
 from records.data import *
+from django.core.exceptions import ValidationError
 # Create your views here.
 
 
@@ -23,9 +25,7 @@ def record_detail(request, slug, pk):
     record = get_object_or_404(models.Record, pk=pk)
     project = models.Project.objects.get(slug=slug)
     template = 'records/record_detail.html'
-    form = forms.ShowRecordForm(instance=record, entry=record.entry_type)
-
-    data = record._meta.get_fields()
+    data = forms.ShowRecordForm(data=model_to_dict(record), entry=record.entry_type)
 
     context = {
         'record':record,
@@ -38,28 +38,6 @@ def record_detail(request, slug, pk):
 
 
 
-class RecordList(LoginRequiredMixin,SelectRelatedMixin, generic.ListView):
-    model = models.Record
-    select_related = ('user', 'project')
-
-
-class ProjectRecords(generic.ListView):
-    model = models.Record
-    template_name = 'records/project_record_list.html'
-
-    def get_queryset(self):
-        try:
-            self.record_project = models.Project.objects.prefetch_related('records').get(project_title__iexact=self.kwargs.get('project_title'))
-        except models.Project.DoesNotExist:
-            raise Http404
-        else:
-            return self.record_project.all()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['record_project'] = self.record_project
-        return context
-
 
 
 def create_record(request, slug):
@@ -68,11 +46,15 @@ def create_record(request, slug):
     context = {}
     if request.method == 'POST':
         form = forms.SaveRecordForm(request.POST)
+        print(project.slug)
         if form.is_valid():
             record = form.save(commit=False)
             record.project = project
             record.save()
             return redirect('projects:single', slug=slug)
+        else:
+            raise ValidationError()
+        
     else:
         form1 = forms.GeneralRecordForm()
         context = {
@@ -82,7 +64,6 @@ def create_record(request, slug):
     return render(request, 'records/record_form.html', context)
 
 def specific_form_ajax(request, slug, entry):
-    print(entry)
     entry = entry
     form = forms.SpecificRecordForm(entry=entry)
     context = {'form':form}
