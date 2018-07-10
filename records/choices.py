@@ -1,4 +1,5 @@
 ENTRY_TYPE_CHOICES = (
+    ('','------------'),
     ("article", "article"),
     ("book", "book"),
     ("booklet", "booklet"),

@@ -23,49 +23,44 @@ class Record(models.Model):
     """
 
     entry_type =    models.CharField(max_length=64, choices=ENTRY_TYPE_CHOICES)
-    cite_key =      models.CharField(max_length=128, null=True)
+    cite_key =      models.CharField(max_length=128, blank=True, default='')
     ############ All entry fields : #############
 
-    title =         models.CharField(max_length=500, null=True)
-    author =        models.CharField(max_length=500, null=True)
-    journal =       models.CharField(max_length=500,null=True) # aka journaltitle
-    year =          models.IntegerField(null=True)
-    volume =        models.CharField(max_length=64, null=True)
-    number =        models.IntegerField(null=True)
-    pages =         models.CharField(max_length=64, null=True)
-    month =         models.IntegerField(null=True)
-    note =          models.CharField(max_length=256, null=True)
+    title =         models.CharField(max_length=500, blank=True, default='')
+    author =        models.CharField(max_length=500, blank=True, default='')
+    journal =       models.CharField(max_length=500, blank=True, default='') # aka journaltitle
+    year =          models.CharField(max_length=64, blank=True, default='')
+    volume =        models.CharField(max_length=64, blank=True, default='')
+    number =        models.CharField(max_length=64, blank=True, default='')
+    pages =         models.CharField(max_length=64, blank=True, default='')
+    month =         models.CharField(max_length=64, blank=True, default='')
+    note =          models.CharField(max_length=256, blank=True, default='')
 
-    editor =        models.CharField(max_length=256, null=True)
-    publisher =     models.CharField(max_length=256, null=True)
-    series =        models.CharField(max_length=256, null=True)
-    address =       models.CharField(max_length=500, null=True)
-    edition =       models.IntegerField(null=True)
-    isbn =          models.IntegerField(null=True) # 10 or 13 digits
+    crossref =      models.CharField(max_length=500, blank=True, default='')
+    annote =        models.CharField(max_length=500, blank=True, default='')
+    key =           models.CharField(max_length=500, blank=True, default='')
 
-    how_published = models.CharField(max_length=500, null=True)
 
-    chapter =       models.CharField(max_length=64, null=True)
-    type =          models.CharField(max_length=128, null=True)
 
-    booktitle =     models.CharField(max_length=500, null=True)
+    editor =        models.CharField(max_length=256, blank=True, default='')
+    publisher =     models.CharField(max_length=256, blank=True, default='')
+    series =        models.CharField(max_length=256, blank=True, default='')
+    address =       models.CharField(max_length=500, blank=True, default='')
+    edition =       models.CharField(max_length=64, blank=True, default='')
 
-    organisation =  models.CharField(max_length=500, null=True)
+    howpublished =  models.CharField(max_length=500, blank=True, default='')
 
-    school =        models.CharField(max_length=256, null=True)
+    chapter =       models.CharField(max_length=64, blank=True, default='')
+    type =          models.CharField(max_length=128, blank=True, default='')
 
-    institution =   models.CharField(max_length=256, null=True)
+    booktitle =     models.CharField(max_length=500, blank=True, default='')
 
-    date =          models.DateField(null=True)
+    organization =  models.CharField(max_length=500, blank=True, default='')
 
-    issn =          models.CharField(max_length=500, null=True)
+    school =        models.CharField(max_length=256, blank=True, default='')
 
-    subtitle =      models.CharField(max_length=500, null=True)
+    institution =   models.CharField(max_length=256, blank=True, default='')
 
-    url =           models.URLField(null=True)
-    urldate =       models.DateField(null=True)
-
-    doi =           models.CharField(max_length=500, null=True)
     #############################################
 
 
@@ -90,11 +85,14 @@ class Record(models.Model):
 
     def save(self, *args,**kwargs):
         last_edited = datetime.now()
-
         super().save(*args,**kwargs)
 
     def get_absolute_url(self):
         return reverse('projects:records:single',kwargs={'slug':self.project.slug, 'pk':self.pk})
+
+    
+
+
 
 
     class Meta:

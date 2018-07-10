@@ -7,7 +7,7 @@ http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php
 
 """
 
-FIELDS = {
+FIELDS = [
     "address",      #0
     "annote",       #1
     "author",       #2
@@ -26,15 +26,14 @@ FIELDS = {
     "organization", #15
     "pages",        #16
     "publisher",    #17
-    "publisher",    #18
-    "school",       #19
-    "series",       #20
-    "title",        #21
-    "type",         #22
-    "volume",       #23
-    "year",         #24
+    "school",       #18
+    "series",       #19
+    "title",        #20
+    "type",         #21
+    "volume",       #22
+    "year",         #23
 
-}
+]
 
 """
 Here follows the specific fields that are required and optional

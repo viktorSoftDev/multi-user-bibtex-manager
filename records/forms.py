@@ -5,15 +5,12 @@ from records.data import *
 from records.choices import *
 from records.form_layouts import *
 
-class GeneralRecordForm(forms.ModelForm):
-    class Meta:
-        model = Record
-        fields = ["entry_type", "cite_key"]
+class GeneralRecordForm(forms.Form):
 
-class SpecificRecordForm(forms.ModelForm):
-    class Meta:
-        model = Record
-        exclude = ['entry_type', 'cite_key']
+    entry_type = forms.ChoiceField(choices=ENTRY_TYPE_CHOICES, required=True)
+    cite_key = forms.CharField(required=True)
+
+class SpecificRecordForm(forms.Form):
 
     def __init__(self,*args,**kwargs):
         entry = kwargs.pop('entry')
@@ -23,14 +20,10 @@ class SpecificRecordForm(forms.ModelForm):
             self.fields[fieldname].required = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
-            self.fields[fieldname] = forms.CharField(required=False)
+            self.fields[fieldname] = forms.CharField()
+            self.fields[fieldname].required = False
 
         self.layout = FORM_LAYOUT[entry]
-
-class SaveRecordForm(forms.ModelForm):
-    class Meta:
-        model = Record
-        fields = '__all__'
 
 class ShowRecordForm(forms.ModelForm):
     class Meta:
@@ -41,9 +34,11 @@ class ShowRecordForm(forms.ModelForm):
         entry = kwargs.pop('entry')
         super().__init__(*args,**kwargs)
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
-            self.fields[fieldname] = forms.CharField(required=True)
+            self.fields[fieldname] = forms.CharField()
+            self.fields[fieldname].required = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
-            self.fields[fieldname] = forms.CharField(required=False)
+            self.fields[fieldname] = forms.CharField()
+            self.fields[fieldname].required = False
 
         self.layout = FORM_LAYOUT[entry]

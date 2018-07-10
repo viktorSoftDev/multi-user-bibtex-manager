@@ -19,15 +19,63 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
   </head>
   <body>
+    <div class="row">
+      <div class="col s2">
+        <header>
+          <ul class="sidenav sidenav-fixed">
+            {% if user.is_authenticated %}
+
+            <li><div class="user-view">
+              <div class="background">
+                <img src="https://cdn.pixabay.com/photo/2015/12/08/00/39/abstract-background-designs-1081912_1280.jpg" alt="">
+              </div>
+
+              <a href="#"></a>
+              <br>
+                <a href="#"></a>
+                <br>
+                  <a href="#"></a>
+                   <br>
+                    <a href="#"></a>
+
+
+            </div> </li>
+              <li><a href="{% url 'projects:all' %}">My Projects</a></li>
+              <li><a href="#">My Profile</a></li>
+            {% else %}
+            {% endif %}
+              <div class="section">
+            <li><a href="#">Settings</a> </li>
+
+
+
+            <li><a href="#">Log out</a> </li>
+              </div>
+            <li>asd</li>
+            <li>asd</li>
+
+
+          </ul>
+        </header>
+    </div>
+
+
+
+<div class="col s10">
+
+  <div class="row">
 
     <!-- Navbar for all pages -->
     <nav class="grey darken-2">
       <div class="nav-wrapper">
-        <div class="container">
+        <div class="col s12">
+
+
           <a href="{% url 'home' %}" class="brand-logo center">Multi-User BibTeX Manager</a>
 
           <ul class="left hide-on-med-and-down">
             {% if user.is_authenticated %}
+
               <li><a href="{% url 'projects:all' %}">My Projects</a></li>
               <li><a href="#">My Profile</a></li>
             {% else %}
@@ -47,43 +95,49 @@
         </div>
 
       </div>
+
+
     </nav>
 
+    {% if user.is_authenticated %}
+
+      <nav class="grey darken-2 my-breadcrumb">
+         <div class="nav-wrapper">
+           <div class="col s12">
+             <a href="{% url 'home' %}" class="breadcrumb">Home</a>
+              {% block breadcrumb %}{% endblock %}
+           </div>
+         </div>
+       </nav>
+    {% endif %}
+    <div class="">
+        {% block content %}{% endblock %}
+    </div>
+
+  </div>
+<div class="row">
+<div class="col s4">
     {% block content_account %}{% endblock %}
+</div>
 
-    <div class="row">
 
-          <div class="col s12 m4 l3">
-            <!-- navigation panel-->
 
-          </div>
 
-          <div class="col s12 m6 l7"> <!-- Note that "m8 l9" was added -->
+
+
+
+
             <!-- page content -->
-            {% if user.is_authenticated %}
 
-              <nav class="grey darken-3 my-breadcrumb">
-                 <div class="nav-wrapper">
-                   <div class="col s12">
-                     <a href="{% url 'home' %}" class="breadcrumb">Home</a>
-                      {% block breadcrumb %}{% endblock %}
-                   </div>
-                 </div>
-               </nav>
-            {% endif %}
-            <div class="">
-                {% block content %}{% endblock %}
-            </div>
 
-          </div>
 
-          <div class="col s12 m2 l2">
+
             <!-- right side content  -->
           {% block content_right %}{% endblock %}
-          </div>
 
-        </div>
 
+</div>
+</div>
 
 
     <!--JavaScript at end of body for optimized loading-->
@@ -92,5 +146,6 @@
     <script>
 
     </script>
+
   </body>
 </html>

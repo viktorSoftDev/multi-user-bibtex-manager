@@ -41,22 +41,39 @@ def record_detail(request, slug, pk):
 
 
 def create_record(request, slug):
-
     project = get_object_or_404(models.Project, slug=slug)
-    context = {}
+    form1 = forms.GeneralRecordForm(request.POST or None)
+
     if request.method == 'POST':
-        form = forms.SaveRecordForm(request.POST)
-        print(project.slug)
-        if form.is_valid():
-            record = form.save(commit=False)
+        form1 = forms.GeneralRecordForm(request.POST)
+        form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+
+        if form1.is_valid():
+            print("form1 valid")
+        if form2.is_valid() and form1.is_valid():
+            fields = [f.name for f in models.Record._meta.get_fields()]
+            data1 = form1.clean()
+            data2 = form2.clean()
+            record = models.Record()
+            record.entry_type = data1['entry_type']
+            record.cite_key = data1['cite_key']
             record.project = project
+            for fieldname in fields:
+                if fieldname in data2:
+                    setattr(record, fieldname, data2[fieldname])
             record.save()
             return redirect('projects:single', slug=slug)
         else:
-            raise ValidationError()
-        
+            context = {
+                'form1':form1,
+                'project':project,
+                'form':form2,
+                'err':True
+            }
+            return render(request, 'records/record_form.html', context)
+
     else:
-        form1 = forms.GeneralRecordForm()
+
         context = {
             'form1':form1,
             'project':project,
