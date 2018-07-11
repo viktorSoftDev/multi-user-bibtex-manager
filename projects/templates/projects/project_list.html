@@ -4,19 +4,101 @@
 
 {% endblock %}
 {% block preproject %}
-<br>
+
+{% endblock %}
+
+{% block project_content %}
+
 <div class="row">
   <div class="col s12">
-    <div class="card grey lighten-5">
+    <div class="card-panel">
       <div class="card-content center-align">
 
 
             <span class="card-title"><h2>My Projects</h2></span>
             <p>Access your projects below or create a new one to get started!</p>
-            <br>
+
 
             <div class="card-action">
               <a href="{% url 'projects:create' %}" class="btn btn-medium waves waves-effect">Create New Project</a>
+            </div>
+<br>
+
+            <div class="list_project">
+                {% for project in object_list  %}
+
+                  <div class="row">
+                    <div class="col s12">
+                      <div class="card hoverable blue-grey darken-1">
+
+                          <div class="card-content white-text">
+                            <span class="card-title left">{{ project.project_title.upper }}
+                              <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
+                              <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
+                            </span>
+
+                            <div class="row">
+                              <div class="col s12">
+                                <hr>
+                                <p>{{ project.description }}</p>
+
+
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="card-action">
+                            <div class="row">
+                              <div class="col s6">
+                                <a class="btn waves-effect waves-light blue left" href="{% url 'projects:single' slug=project.slug %}">
+                                  <i class="material-icons left">visibility</i>
+                                  View Project
+                                </a>
+                              </div>
+                              <div class="col s6">
+                                <div class="right-align">
+                                  <a class="btn waves-effect waves-light red darken-3" href="#{{ project.project_title }}">
+                                    <i class="material-icons left">delete</i>
+                                    Delete Project
+                                  </a>
+
+                                  <div id="{{ project.project_title }}" class="modal">
+                                     <div class="modal-content">
+                                       <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
+                                       <p class="center-align">Deleting the project will also delete any records
+                                       within the project. <br>This will delete the project for
+                                       everyone that is a projectmember. <br>To Delete
+                                       the project locally; use the 'Leave' option.<br>
+                                       Deleting this project can not be reversed.</p>
+                                     </div>
+                                     <div class="modal-footer">
+                                       <div class="modal-action right-align">
+                                         <form method="POST">
+                                           {% csrf_token %}
+                                           <a class="modal-close btn-flat waves-effect waves-blue grey-text" href="#!">Cancel</a>
+                                           <input type="submit" name="{{ project.slug }}" value="Confirm Delete" class="modal-close btn-flat waves-effect waves-red blue-grey-text">
+                                         </form>
+                                         <a href="#!" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+                                         <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+                                         <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
+
+                                       </div>
+                                     </div>
+                                   </div>
+                                </div>
+
+
+                              </div>
+
+                            </div>
+
+                          </div>
+
+
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
             </div>
 
       </div>
@@ -26,67 +108,14 @@
 </div>
 
 
+<script>
+$(document).ready(function(){
+  $('.modal').modal();
+});
 
-{% endblock %}
-
-{% block project_content %}
-
-
-
-<div class="list_project">
-    {% for project in object_list  %}
-
-      <div class="row">
-        <div class="col s12">
-          <div class="card hoverable grey darken-1">
-
-              <div class="card-content white-text">
-                <span class="card-title">{{ project.project_title.upper }}
-                  <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
-                  <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
-                </span>
-
-                <div class="row">
-                  <div class="col s12">
-                    <hr>
-                    <p>{{ project.description }}</p>
-
-                    <br>
-                    <br>
-                  </div>
-                </div>
-
-              </div>
-              <div class="card-action">
-                <div class="row">
-                  <div class="col s6">
-                    <a class="btn waves-effect waves-light blue" href="{% url 'projects:single' slug=project.slug %}">
-                      <i class="material-icons left">visibility</i>
-                      View Project
-                    </a>
-                  </div>
-                  <div class="col s6">
-                    <div class="right-align">
-                      <a class="btn waves-effect waves-light red darken-3" href="{% url 'projects:delete' slug=project.slug %}">
-                        <i class="material-icons left">delete</i>
-                        Delete Project
-                      </a>
-
-                    </div>
+</script>
 
 
-                  </div>
-
-                </div>
-
-              </div>
-
-
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-</div>
 
 {% endblock %}
 

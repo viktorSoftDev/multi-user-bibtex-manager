@@ -32,6 +32,14 @@ class SingleProject(LoginRequiredMixin, generic.DetailView):
 class ListProjects(LoginRequiredMixin, generic.ListView):
     model = Project
 
+    # this post method is only for deleting projects
+    def post(self, request, *args, **kwargs):
+        for k in request.POST.keys():
+            if k != 'csrfmiddlewaretoken':
+                print(k)
+                Project.objects.filter(members=self.request.user, slug=k).delete()
+        return redirect('projects:all')
+
     def get_queryset(self):
         return Project.objects.filter(members=self.request.user)
 

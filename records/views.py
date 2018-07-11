@@ -37,8 +37,21 @@ def record_detail(request, slug, pk):
 
 
 
+def edit_record(request, slug, pk):
+    project = get_object_or_404(models.Project, slug=slug)
+    record = get_object_or_404(models.Record, pk=pk)
+
+    form1 = forms.GeneralRecordForm(instance=record)
+    form2 = forms.SpecificRecordForm(instance=record)
 
 
+    context = {
+        'form1':form1,
+        'form2':form2,
+        'project':project,
+        'record':record
+    }
+    return render(request, 'records/record_edit.html', context)
 
 def create_record(request, slug):
     project = get_object_or_404(models.Project, slug=slug)
