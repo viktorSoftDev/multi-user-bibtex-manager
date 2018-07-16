@@ -1,4 +1,8 @@
 {% extends "projects/project_base.html" %}
+{% block head_block %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css">
+{% endblock %}
 
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
@@ -16,152 +20,214 @@
       <div class="card-content">
         <div class="row">
           <div class="col s12">
-            <span class="card-title"><h2 class="left">{{ project.project_title }}</h2>
-          </div>
-        </div>
+            <span class="card-title"><h2 class="left">{{ project.project_title }}
+            <i class="material-icons small grey-text tooltipped" data-position="bottom" data-tooltip="{{ project.description }}">
+              info_outline
+            </i></h2>
+          </div> <!-- close col s12 -->
+        </div> <!-- close row -->
+
         <div class="row">
           <div class="col s12">
-            <h5>Project shared with: <span class="">{{ project.members.user.first_name }}</span></h5>
-                </span>
-            <h5>Description:</h5>
-            <p>{{ project.description }}</p>
-            <div class="divider"></div>
             <div class="section">
-              <a class="btn waves-effect btn-medium waves-light blue" href="#">
-                <i class="material-icons left">edit</i>
-                Edit Project
-              </a>
-              <a class="btn waves-effect waves-light red darken-3" href="#">
-                <i class="material-icons left">delete</i>
-                Delete Project
-              </a>
-            </div>
-
-          </div>
-        </div>
-
-
-
-
-
-
-        <div class="row">
-          <div class="col s12">
-
-
-
-        <div class="section">
-              <h3 class="left-align">Records in {{ project.project_title }} </h3>
-
-
-                <a href="{% url 'projects:records:create' slug=project.slug %}" class="btn waves-light waves-effect">
-                  <i class="material-icons left">add</i>
-                  Add Entry
-                </a>
-                <a href="#" class="btn waves-light waves-effect">
-                  <i class="material-icons left">file_upload</i>
-                  Import file
-                </a>
-                <a href="#" class="btn waves-light waves-effect right">
-                  <i class="material-icons left">file_download</i>
-                  Export Project
-                </a>
-
-
-
-        </div>
-        <div class="section">
-          <div class="row">
-            <div class="col s12">
               <div class="row">
-                <div class="input-field col s12">
-                  <i class="material-icons prefix">search</i>
-                  <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search...">
+                <div class="col s12">
+                  <div class="row">
+                    <div class="input-field col s4">
+                    <select multiple>
+                      <option value="cite_key" disabled selected>Cite Key</option>
+                      <option value="entry_type" selected>Entry Type</option>
+                      <option value="title" selected>Title</option>
+                      <option value="author" selected>Author</option>
+                      <option value="year" selected>Year</option>
+                      <option value="editor">Editor</option>
+                      <option value="publisher">Publisher</option>
+                      <option value="journal">Journal</option>
 
+                    </select>
+
+                  </div>
+                    <div class="input-field col s8">
+                      <i class="material-icons prefix">search</i>
+                      <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search...">
+
+                    </div>
+                    <a  href="{% url 'projects:records:create' slug=project.slug %}"
+                        class="btn btn-small waves-light waves-effect cyan darken-1">
+                          Add Entry
+                    </a>
+
+
+
+
+
+                  </div>
                 </div>
               </div>
-            </div>
+
+
+
+
+              <table class="mdl-data-table" style="width:100%" id="example">
+                <!-- TABLE HEAD -->
+                <thead>
+                  <tr>
+                    <th>Cite Key</th>
+                    <th>Entry Type</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Journal</th>
+                    <th>Editor</th>
+                    <th>Publisher</th>
+                    <th>year</th>
+                    <th>action</th>
+                  </tr>
+                </thead>
+                <!-- END TABLE HEAD -->
+                <tbody>
+                  <!-- TABLE BODY -->
+                  {% for record in project.records.all  %}
+                    <tr class="clickable-row" data-href="#">
+                      <td>
+                        <a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a>
+                      </td>
+                      <td>
+                        {% if record.entry_type %}{{ record.entry_type }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.title %}{{ record.title }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.author %}{{ record.author }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.journal %}{{ record.journal }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.editor %}{{ record.editor }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.publisher %}{{ record.publisher }}{% else %}n/a{% endif %}
+                      </td>
+                      <td>
+                        {% if record.year %}{{ record.year }}{% else %}n/a{% endif %}
+                      </td>
+
+
+                      <td class="right">
+                        <a href="#!" class="grey-text">
+                          <i class="material-icons">edit</i>
+                        </a>
+                        <a href="#!" class="grey-text">
+                          <i class="material-icons">content_copy</i>
+                        </a>
+                        <a href="#!" class="grey-text">
+                          <i class="material-icons">delete</i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  <!-- END TABLE BODY -->
+                </tbody>
+              </table>
+            </div> <!-- close section -->
+          </div> <!-- close col s12 -->
+        </div> <!-- close row -->
+      </div> <!-- close card-content -->
+    </div> <!-- close card grey lighten-5 -->
+
+
+        <!--  A floating button that acts as a toolbar that is available even if the
+          user scrolls down -->
+          <div class="fixed-action-btn">
+            <a class="btn-floating btn-large cyan darken-1">
+              <i class="large material-icons">mode_edit</i>
+            </a>
+            <ul>
+              <li>
+                <a  class="btn-floating cyan darken-1 tooltipped"
+                    data-position="left"
+                    data-tooltip="Add Entry"
+                    href="{% url 'projects:records:create' slug=project.slug %}">
+                    <i class="material-icons">
+                      add
+                    </i>
+                </a>
+              </li>
+              <li>
+                <a  class="btn-floating yellow darken-2 tooltipped"
+                    data-position="left"
+                    data-tooltip="Import File"
+                    href="#">
+                    <i class="material-icons">
+                      file_upload
+                    </i>
+                </a>
+              </li>
+              <li>
+                <a  class="btn-floating green tooltipped"
+                    data-position="left"
+                    data-tooltip="Export Project"
+                    href="#">
+                    <i class="material-icons">
+                      file_download
+                    </i>
+                </a>
+              </li>
+              <li>
+                <a  class="btn-floating red tooltipped"
+                    data-position="left"
+                    data-tooltip="Project Settings"
+                    href="#">
+                    <i class="material-icons">
+                      edit
+                    </i>
+                  </a>
+                </li>
+            </ul>
           </div>
-          <table class="highlight">
-                 <thead>
-                   <tr>
-                       <th>Cite Key</th>
-                       <th>Entry Type</th>
-                       <th>Title</th>
-                       <th class="right"></th>
-                   </tr>
-                 </thead>
-
-                 <tbody>
-                   {% for record in project.records.all  %}
-                     <tr class="clickable-row" data-href="#">
-
-                         <td><a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a></td>
-                         <td>{{ record.entry_type }}</td>
-                         <td>{{ record.title }}</td>
-
-                         <td class="right">
-                           <a href="#!" class="grey-text">
-                             <i class="material-icons">edit</i>
-                           </a>
-                           <a href="#!" class="grey-text">
-                             <i class="material-icons">content_copy</i>
-                           </a>
-                           <a href="#!" class="grey-text">
-                             <i class="material-icons">delete</i>
-                           </a>
-                         </td>
-                     </tr>
-
-                   {% endfor %}
-
-                 </tbody>
-               </table>
-
-
-
 
         </div>
-          <div class="card-action">
-            <div class="left-align">
-
-
-          </div>
-            <div class="right-align">
-              <a class="btn waves-effect btn-medium waves-light blue" href="#">
-                <i class="material-icons left">edit</i>
-                Edit Project
-              </a>
-              <a class="btn waves-effect waves-light red darken-3" href="#">
-                <i class="material-icons left">delete</i>
-                Delete Project
-              </a>
-
-            </div>
-          </div>
-
-
-  </div>
       </div>
-    </div>
-  </div>
-</div>
-
-  </div>
 
 
 
-<div class="">
-
-</div>
-
-
-
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.material.min.js"></script>
 <script>
+
+function renderTable(){
+
+  for (var i = 0; i < array.length; i++) {
+
+  }
+}
+
+
 jQuery(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
+    $('.fixed-action-btn').floatingActionButton();
+    $('select').formSelect();
+    $('.tooltipped').tooltip({delay:50});
+    $('#example').DataTable({
+      "order": [[ 3, "desc" ]],
+      "scrollX": true,
+      "sDom": 'frtip',
+
+      "iDisplayLength": 20,
+      "searchPlaceholder":"something",
+
+        columnDefs: [
+            {
+                targets: [ 0, 1, 2 ],
+                className: 'mdl-data-table__cell--non-numeric',
+
+            }
+        ]
     });
+
+
+
+
 });
 
 </script>

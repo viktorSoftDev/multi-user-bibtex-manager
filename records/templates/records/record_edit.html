@@ -17,10 +17,13 @@
         </span>
         <form id="record_form" class="" action="{% url 'projects:records:create' slug=project.slug %}" method="POST">
           {% csrf_token %}
-          {% form form=form %}{% endform %}
-            <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light">ADD RECORD</button>
+          {% form form=form1 %}{% endform %}
+          {% form form=form2 %}{% endform %}
+            <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light">Update record</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+{% endblock %}

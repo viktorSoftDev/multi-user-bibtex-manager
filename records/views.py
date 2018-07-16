@@ -41,8 +41,8 @@ def edit_record(request, slug, pk):
     project = get_object_or_404(models.Project, slug=slug)
     record = get_object_or_404(models.Record, pk=pk)
 
-    form1 = forms.GeneralRecordForm(instance=record)
-    form2 = forms.SpecificRecordForm(instance=record)
+    form1 = forms.GeneralRecordForm(data=model_to_dict(record))
+    form2 = forms.SpecificRecordForm(data=model_to_dict(record),entry=record.entry_type)
 
 
     context = {

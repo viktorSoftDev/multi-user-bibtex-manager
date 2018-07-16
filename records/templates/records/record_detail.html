@@ -58,7 +58,7 @@
 
           </div>
             <div class="right-align">
-              <a class="btn waves-effect btn-medium waves-light blue" href="#">
+              <a class="btn waves-effect btn-medium waves-light blue" href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}">
                 <i class="material-icons left">edit</i>
                 Edit
               </a>

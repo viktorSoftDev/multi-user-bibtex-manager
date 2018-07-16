@@ -18,7 +18,9 @@
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
 
+    {% block head_block %}
 
+    {% endblock %}
     <link rel="stylesheet" href="{% static 'css/master.css' %}">
   </head>
   <body class="grey lighten-3">
@@ -50,7 +52,7 @@
                   <li><a href="#">My Profile</a></li>
                   <div class="section">
                 <li><a href="#">Settings</a> </li>
-                <li><a href="#">Log out</a> </li>
+                <li><a href="{% url 'accounts:logout' %}">Log out</a> </li>
                   </div>
               </ul>
             </header>
@@ -59,6 +61,8 @@
 
             <!-- Navbar -->
             <div class="my-page">
+
+          <div class="navbar-fixed">
 
 
             <nav class="blue-grey darken-2">
@@ -75,9 +79,9 @@
                 </div> <!-- close row -->
               </div> <!-- close nav-wrapper -->
             </nav>
+          </div>
 
-
-
+  <div class="navbar-fixed">
 
 
             <nav class="blue-grey darken-2 hide-on-med-and-down">
@@ -89,9 +93,9 @@
                   </div>
                 </nav>
 
-
+</div>
                 <div class="row">
-                  <div class="col l10 m12">
+                  <div class="col l11 m11">
 
 
                   {% block content %}{% endblock %}
@@ -100,10 +104,6 @@
 
 
 
-              <div class="col l2">
-                  {% block content_right %}{% endblock %}
-
-              </div>
 
             </div>
           </div>
