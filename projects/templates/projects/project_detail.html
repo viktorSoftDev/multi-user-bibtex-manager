@@ -7,6 +7,12 @@
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+<a href="" class="breadcrumb">
+  <a  href="{% url 'projects:records:create' slug=project.slug %}"
+      class="btn btn-small waves-light waves-effect cyan darken-3">
+      Add entry
+  </a>
+</a>
 {% endblock %}
 
 
@@ -20,55 +26,106 @@
       <div class="card-content">
         <div class="row">
           <div class="col s12">
-            <span class="card-title"><h2 class="left">{{ project.project_title }}
+            <span class="card-title"><h2 class="center">{{ project.project_title }}
             <i class="material-icons small grey-text tooltipped" data-position="bottom" data-tooltip="{{ project.description }}">
               info_outline
             </i></h2>
-          </div> <!-- close col s12 -->
-        </div> <!-- close row -->
 
+        <h6 class="center">Choose what fields to show</h6>
+      </div> <!-- close col s12 -->
+    </div> <!-- close row -->
         <div class="row">
-          <div class="col s12">
-            <div class="section">
-              <div class="row">
-                <div class="col s12">
-                  <div class="row">
-                    <div class="input-field col s4">
-                    <select multiple>
-                      <option value="cite_key" disabled selected>Cite Key</option>
-                      <option value="entry_type" selected>Entry Type</option>
-                      <option value="title" selected>Title</option>
-                      <option value="author" selected>Author</option>
-                      <option value="year" selected>Year</option>
-                      <option value="editor">Editor</option>
-                      <option value="publisher">Publisher</option>
-                      <option value="journal">Journal</option>
+          <div class="col s4">
 
-                    </select>
+          </div>
 
-                  </div>
-                    <div class="input-field col s8">
-                      <i class="material-icons prefix">search</i>
-                      <input type="text" id="autocomplete-input" class="autocomplete" placeholder="Search...">
+                    <div class="col s12">
+                      <div class="row">
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Cite Key</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Entry Type</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" value="title"/>
+                            <span>Title</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Author</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Journal</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Editor</span>
+                          </label>
+                        </div>
+
+                      </div>
+                      <div class="row">
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Publisher</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Year</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>Month</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>XXXXXXXX</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>XXXXXXX</span>
+                          </label>
+                        </div>
+                        <div class="col s2">
+                          <label>
+                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <span>XXXXXXX</span>
+                          </label>
+                        </div>
+
+
 
                     </div>
-                    <a  href="{% url 'projects:records:create' slug=project.slug %}"
-                        class="btn btn-small waves-light waves-effect cyan darken-1">
-                          Add Entry
-                    </a>
 
 
 
 
 
-                  </div>
-                </div>
-              </div>
-
-
-
-
-              <table class="mdl-data-table" style="width:100%" id="example">
+              <table class="mdl-data-table " style="width:100%" id="example">
                 <!-- TABLE HEAD -->
                 <thead>
                   <tr>
@@ -79,8 +136,8 @@
                     <th>Journal</th>
                     <th>Editor</th>
                     <th>Publisher</th>
-                    <th>year</th>
-                    <th>action</th>
+                    <th>Year</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <!-- END TABLE HEAD -->
@@ -92,36 +149,42 @@
                         <a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a>
                       </td>
                       <td>
-                        {% if record.entry_type %}{{ record.entry_type }}{% else %}n/a{% endif %}
+                        {% if record.entry_type %}{{ record.entry_type }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.title %}{{ record.title }}{% else %}n/a{% endif %}
+                        {% if record.title %}{{ record.title }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.author %}{{ record.author }}{% else %}n/a{% endif %}
+                        {% if record.author %}{{ record.author }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.journal %}{{ record.journal }}{% else %}n/a{% endif %}
+                        {% if record.journal %}{{ record.journal }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.editor %}{{ record.editor }}{% else %}n/a{% endif %}
+                        {% if record.editor %}{{ record.editor }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.publisher %}{{ record.publisher }}{% else %}n/a{% endif %}
+                        {% if record.publisher %}{{ record.publisher }}{% else %}-{% endif %}
                       </td>
                       <td>
-                        {% if record.year %}{{ record.year }}{% else %}n/a{% endif %}
+                        {% if record.year %}{{ record.year }}{% else %}-{% endif %}
                       </td>
 
 
-                      <td class="right">
-                        <a href="#!" class="grey-text">
+                      <td class="">
+                        <a  href="#!" class="grey-text tooltipped"
+                            data-position="top"
+                            data-tooltip="Edit">
                           <i class="material-icons">edit</i>
                         </a>
-                        <a href="#!" class="grey-text">
+                        <a href="#!" class="grey-text tooltipped"
+                            data-position="top"
+                            data-tooltip="Copy">
                           <i class="material-icons">content_copy</i>
                         </a>
-                        <a href="#!" class="grey-text">
+                        <a href="#!" class="grey-text tooltipped"
+                            data-position="top"
+                            data-tooltip="Delete">
                           <i class="material-icons">delete</i>
                         </a>
                       </td>
@@ -130,7 +193,7 @@
                   <!-- END TABLE BODY -->
                 </tbody>
               </table>
-            </div> <!-- close section -->
+
           </div> <!-- close col s12 -->
         </div> <!-- close row -->
       </div> <!-- close card-content -->
@@ -139,8 +202,8 @@
 
         <!--  A floating button that acts as a toolbar that is available even if the
           user scrolls down -->
-          <div class="fixed-action-btn">
-            <a class="btn-floating btn-large cyan darken-1">
+          <div class="fixed-action-btn click-to-toggle">
+            <a class="btn-floating btn-large cyan darken-1" active>
               <i class="large material-icons">mode_edit</i>
             </a>
             <ul>
@@ -205,24 +268,30 @@ function renderTable(){
 
 
 jQuery(document).ready(function($) {
-    $('.fixed-action-btn').floatingActionButton();
+    $('.fixed-action-btn').floatingActionButton({
+    });
+     $('.fixed-action-btn').floatingActionButton('open');
     $('select').formSelect();
     $('.tooltipped').tooltip({delay:50});
     $('#example').DataTable({
-      "order": [[ 3, "desc" ]],
+      // Thx to datatables.net for this jquery plugin
+      "order": [[ 2, "asc" ]],
       "scrollX": true,
       "sDom": 'frtip',
-
       "iDisplayLength": 20,
       "searchPlaceholder":"something",
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Filter by anything...",
+         "lengthMenu": "Display _MENU_ records",
+      },
+      columnDefs: [
+          {
+              targets: [ 0, 1, 2 ],
+              className: 'mdl-data-table__cell--non-numeric',
 
-        columnDefs: [
-            {
-                targets: [ 0, 1, 2 ],
-                className: 'mdl-data-table__cell--non-numeric',
-
-            }
-        ]
+          }
+      ]
     });
 
 
