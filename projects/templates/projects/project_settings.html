@@ -1,0 +1,108 @@
+{% extends "projects/project_base.html" %}
+{% block breadcrumb %}
+
+{% endblock %}
+
+{% block project_content %}
+
+
+
+
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12">
+
+                  <h2 class="center">{{ project.project_title }}</h2>
+                  <ul class="collection with-header">
+
+                    <li class="collection-header">
+
+                        <h4>Project Members</h4>
+
+                      </li>
+                    {% for member in members %}
+                      <li class="collection-item avatar">
+                        <img src="" alt="avatar" class="circle">
+                        <span class="title">{{ member.first_name }} {{ member.last_name }}</span>
+                        <p>{{ member.email }}<br>
+                          Admin / Read&Write / ReadOnly
+                        </p>
+                        <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                  {% if invites %}
+                  <ul class="collection with-header">
+
+                    <li class="collection-header">
+                        <h4>Pending Invitations</h4>
+
+                      </li>
+                    {% for invite in invites %}
+                    <li class="collection-item">
+                      <div>
+                        <strong>{{ invite.reciever.first_name }} {{ invite.reciever.last_name }}</strong>
+                        has been invited by   <strong>{{ invite.sender.first_name }} {{ invite.sender.last_name }}</strong>
+                        <a href="#!" class="secondary-content"><i class="material-icons">delete</i></a>
+                      </div>
+                    </li>
+
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
+                  <div class="center-align">
+                    <a  href="{% url 'projects:invite' slug=project.slug %}"
+                        class="btn btn-medium indigo waves-effect waves-light">
+                        <i class="material-icons left">person_add</i> Invite User to Collaborate</a>
+
+                  </div>
+
+
+
+          </div>
+        </div>
+        <div class="card-action">
+          <div class="right-align">
+            <a class="btn waves-effect btn-medium waves-light indigo" href="#">
+              <i class="material-icons left">edit</i>
+              Edit
+            </a>
+            <a class="btn waves-effect waves-light red darken-3" href="#{{ project.pk }}">
+              <i class="material-icons left">delete</i>
+              Delete Project
+            </a>
+
+            <div id="{{ project.pk }}" class="modal">
+               <div class="modal-content">
+                 <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
+                 <p class="center-align">Deleting the project will also delete any records
+                 within the project. <br>This will delete the project for
+                 everyone that is a projectmember. <br>To Delete
+                 the project locally; use the 'Leave' option.<br>
+                 Deleting this project can not be reversed.</p>
+               </div>
+               <div class="modal-footer">
+                 <div class="modal-action right-align">
+                   <a href="#!" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+                 <a href="#" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+                   <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
+
+                 </div>
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $('.modal').modal();
+  });
+</script>
+{% endblock %}

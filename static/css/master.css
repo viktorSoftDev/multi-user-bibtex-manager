@@ -1,26 +1,7 @@
 
 
-@media (min-width: 992px) {
+@media (min-width: 991px) {
   .my-page{
   margin-left: 300px;
   }
-}
-
-
-
-
-
-.my-toolbar{
-  overflow:hidden;
-  position: fixed;
-  bottom: 0;
-
-}
-
-
-
-.dataTables_length {
-float:left;
-height:2.5em;
-width:40%;
 }

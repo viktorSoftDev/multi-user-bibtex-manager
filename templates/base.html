@@ -30,82 +30,71 @@
         <!-- ################### -->
 
   <header>
-
-              <ul class="sidenav sidenav-fixed side-nav">
-                <li>
-                  <div class="user-view">
-                    <div class="background">
-                      <img src="{% static 'images/userview.jpg' %}" alt="">
-                    </div> <!-- close background -->
-                    <div class="user-img">
-
+    <ul class="sidenav sidenav-fixed side-nav">
+      <li>
+        <div class="user-view">
+          <div class="background">
+            <img src="{% static 'images/userview.jpg' %}" alt="">
+          </div> <!-- close background -->
+          <div class="user-img">
 
 
-                        <br><br><br><br>
-                    </div> <!-- close user-img -->
-                    <div class="section">
-                      <h5 class="white-text">{{ user.first_name }} {{ user.last_name }}</h5>
-                    </div> <!-- close section -->
-                  </div> <!-- close user view -->
-                </li>
-                  <li><a href="{% url 'projects:all' %}">My Projects</a></li>
-                  <li><a href="#">My Profile</a></li>
-                  <div class="section">
-                <li><a href="#">Settings</a> </li>
-                <li><a href="{% url 'accounts:logout' %}">Log out</a> </li>
-                  </div>
+
+              <br><br><br><br>
+          </div> <!-- close user-img -->
+          <div class="section">
+            <h5 class="white-text">{{ user.first_name }} {{ user.last_name }}</h5>
+          </div> <!-- close section -->
+        </div> <!-- close user view -->
+      </li>
+        <li><a href="{% url 'projects:all' %}">My Projects</a></li>
+        <li><a href="{% url 'accounts:detail' %}">My Profile</a></li>
+        <div class="section">
+      <li><a href="#">Settings</a> </li>
+      <li><a href="{% url 'accounts:logout' %}">Log out</a> </li>
+        </div>
+    </ul>
+  </header>
+
+
+
+
+  <div class="my-page">
+    <!-- Navbar -->
+    <div class="navbar-fixed">
+
+
+      <nav class="blue-grey darken-2">
+        <div class="nav-wrapper">
+          <div class="row">
+            <div class="col s12">
+              <a href="{% url 'home' %}" class="brand-logo hide-on-med-and-down">Multi-User BibTeX Manager</a>
+              <a href="#" data-activates="side-nav" class="button-collapse left hide-on-large-only"><i class="material-icons">menu</i> </a>
+
+              <ul class="right">
+                <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
               </ul>
-            </header>
-
-
-
-            <!-- Navbar -->
-            <div class="my-page">
+            </div> <!-- close col -->
+          </div> <!-- close row -->
+        </div> <!-- close nav-wrapper -->
+      </nav>
+    </div>
 
           <div class="navbar-fixed">
-
-
-            <nav class="blue-grey darken-2">
+            <nav class="blue-grey darken-2 hide-on-med-and-down">
               <div class="nav-wrapper">
-                <div class="row">
-                  <div class="col s12">
-                    <a href="{% url 'home' %}" class="brand-logo hide-on-med-and-down">Multi-User BibTeX Manager</a>
-                    <a href="#" data-activates="side-nav" class="button-collapse left hide-on-large-only"><i class="material-icons">menu</i> </a>
-
-                    <ul class="right">
-                      <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
-                    </ul>
-                  </div> <!-- close col -->
-                </div> <!-- close row -->
-              </div> <!-- close nav-wrapper -->
+                <div class="col s12">
+                  <a href="{% url 'home' %}" class="breadcrumb">Home</a>
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+              </div>
             </nav>
           </div>
-
-  <div class="navbar-fixed">
-
-
-            <nav class="blue-grey darken-2 hide-on-med-and-down">
-                  <div class="nav-wrapper">
-                    <div class="col s12">
-                      <a href="{% url 'home' %}" class="breadcrumb">Home</a>
-                        {% block breadcrumb %}{% endblock %}
-                    </div>
-                  </div>
-                </nav>
-
-</div>
-                <div class="row">
-                  <div class="col l11 m11">
-
-
-                  {% block content %}{% endblock %}
-                  </div>
-
-
-
-
-
+          <div class="row">
+            <div class="col l11 m11">
+            {% block content %}{% endblock %}
             </div>
+          </div>
           </div>
 
             <!-- ################### -->
@@ -116,11 +105,11 @@
 
       {% else %}
         <!-- Navbar -->
-        <nav class="grey darken-2">
+        <nav class="blue-grey darken-2">
           <div class="nav-wrapper">
             <div class="row">
               <div class="col s12">
-                <a href="{% url 'home' %}" class="brand-logo left">Multi-User BibTeX Manager</a>
+                <a href="{% url 'home' %}" class="brand-logo center">Multi-User BibTeX Manager</a>
                 <ul class="right hide-on-med-and-down">
                   <li><a href="{% url 'accounts:login' %}">Log In</a></li>
                   <li><a href="{% url 'accounts:signup' %}">Sign Up</a></li>

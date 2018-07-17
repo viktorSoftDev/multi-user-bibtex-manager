@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block breadcrumb %}
+  <a href="{% url 'accounts:detail' %}" class="breadcrumb">My Profile</a>
+{% endblock %}
+{% block content %}
+
+
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12">
+
+              <div class="row">
+
+                <div class="col s6 offset-s3">
+                  <img class="circle responsive-img" src="{% static 'images/userview.jpg' %}" alt="">
+
+
+
+                  <h2 class="center">{{ user.first_name }} {{ user.last_name }}</h2>
+                  <h4 class="center">{{ user.email}}</h4>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="card-action">
+          <div class="right-align">
+            <a class="btn waves-effect btn-medium waves-light indigo" href="#">
+              <i class="material-icons left">edit</i>
+              Edit
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

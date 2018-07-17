@@ -40,9 +40,26 @@ def record_detail(request, slug, pk):
 def edit_record(request, slug, pk):
     project = get_object_or_404(models.Project, slug=slug)
     record = get_object_or_404(models.Record, pk=pk)
+    if request.method == 'POST':
+        form1 = forms.GeneralRecordForm(request.POST)
+        form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+        if form1.is_valid() and form2.is_valid():
+            fields = [f.name for f in models.Record._meta.get_fields()]
+            data1 = form1.clean()
+            data2 = form2.clean()
+            record.entry_type = data1['entry_type']
+            record.cite_key = data1['cite_key']
 
-    form1 = forms.GeneralRecordForm(data=model_to_dict(record))
-    form2 = forms.SpecificRecordForm(data=model_to_dict(record),entry=record.entry_type)
+            for fieldname in fields:
+                if fieldname in data2:
+                    setattr(record, fieldname, data2[fieldname])
+            record.save()
+            return redirect('projects:single', slug=slug)
+
+    else:
+
+        form1 = forms.GeneralRecordForm(data=model_to_dict(record))
+        form2 = forms.SpecificRecordForm(data=model_to_dict(record),entry=record.entry_type)
 
 
     context = {
@@ -53,6 +70,11 @@ def edit_record(request, slug, pk):
     }
     return render(request, 'records/record_edit.html', context)
 
+def delete_record(request, slug, pk):
+    record = get_object_or_404(models.Record, pk=pk)
+    models.Record.objects.filter(project=get_object_or_404(models.Project, slug=slug), pk=pk).delete()
+    return redirect('projects:single', slug=slug)
+
 def create_record(request, slug):
     project = get_object_or_404(models.Project, slug=slug)
     form1 = forms.GeneralRecordForm(request.POST or None)
@@ -60,9 +82,6 @@ def create_record(request, slug):
     if request.method == 'POST':
         form1 = forms.GeneralRecordForm(request.POST)
         form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
-
-        if form1.is_valid():
-            print("form1 valid")
         if form2.is_valid() and form1.is_valid():
             fields = [f.name for f in models.Record._meta.get_fields()]
             data1 = form1.clean()

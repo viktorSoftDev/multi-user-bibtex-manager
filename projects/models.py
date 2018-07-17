@@ -45,3 +45,13 @@ class ProjectMember(models.Model):
 
     class Meta:
         unique_together = ('project', 'user')
+
+
+class Invitation(models.Model):
+    project = models.ForeignKey(Project, related_name='invites', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='user_invites_sent', on_delete=models.CASCADE)
+    reciever = models.ForeignKey(User, related_name='user_invites_recieved', on_delete=models.CASCADE)
+    message = models.TextField(max_length=500)
+
+    def __str__(self):
+        return self.project.project_title + ' invitation from '+ self.sender.first_name + ' to ' + self.reciever.first_name

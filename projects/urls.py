@@ -10,7 +10,9 @@ urlpatterns = [
     path('<slug:slug>/records/', include('records.urls', namespace='records')),
     path('<slug:slug>/', views.SingleProject.as_view(),name='single'),
     path('<slug:slug>/leave/', views.LeaveProject.as_view(),name='leave'),
+    path('<slug:slug>/invite/', views.project_invite ,name='invite'),
     path('<slug:slug>/delete/', views.DeleteProject.as_view(), name='delete'),
+    path('<slug:slug>/settings/', views.project_settings, name='settings'),
 
     # join
     # invite

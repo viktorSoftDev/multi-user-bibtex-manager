@@ -15,7 +15,7 @@
         <span class="card-title">
           <h5 class="center-align">Edit {{ record.title.capitalize }}</h5>
         </span>
-        <form id="record_form" class="" action="{% url 'projects:records:create' slug=project.slug %}" method="POST">
+        <form id="record_form" class="" action="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}" method="POST">
           {% csrf_token %}
           {% form form=form1 %}{% endform %}
           {% form form=form2 %}{% endform %}
