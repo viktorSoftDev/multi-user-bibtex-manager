@@ -1,0 +1,74 @@
+
+    {% for project in projects  %}
+      <div class="row">
+        <div class="col s12">
+          <div class="card hoverable blue-grey darken-1">
+            <div class="card-content white-text">
+                <span class="card-title left">{{ project.project_title.upper }}
+                  <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ project.members.count }}</span>
+                  <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ project.records.count }}</span>
+                </span>
+
+                <div class="row">
+                  <div class="col s12">
+                    <hr>
+                    <p>{{ project.description }}</p>
+
+
+                  </div>
+                </div>
+
+              </div>
+              <div class="card-action">
+                <div class="row">
+                  <div class="col s6">
+                    <a class="btn waves-effect waves-light cyan darken-2 left" href="{% url 'projects:single' slug=project.slug %}">
+                      <i class="material-icons left">visibility</i>
+                      View Project
+                    </a>
+                  </div>
+                  <div class="col s6">
+                    <div class="right-align">
+                      <a class="btn waves-effect waves-light indigo darken-3" href="{% url 'projects:settings' slug=project.slug %}">
+                        <i class="material-icons left">build</i>
+                        Project Settings
+                      </a>
+
+
+                      <div id="{{ project.pk }}" class="modal">
+                         <div class="modal-content">
+                           <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
+                           <p class="center-align">Deleting the project will also delete any records
+                           within the project. <br>This will delete the project for
+                           everyone that is a projectmember. <br>To Delete
+                           the project locally; use the 'Leave' option.<br>
+                           Deleting this project can not be reversed.</p>
+                         </div>
+                         <div class="modal-footer">
+                           <div class="modal-action right-align">
+                             <form method="POST">
+                               {% csrf_token %}
+                               <a class="modal-close btn-flat waves-effect waves-blue grey-text" href="#!">Cancel</a>
+                               <input type="submit" name="{{ project.slug }}" value="Confirm Delete" class="modal-close btn-flat waves-effect waves-red blue-grey-text">
+                             </form>
+                             <a href="#!" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+                             <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+                             <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
+
+                           </div>
+                         </div>
+                       </div>
+                    </div>
+
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}

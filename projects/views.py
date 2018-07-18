@@ -31,6 +31,17 @@ class CreateProject(LoginRequiredMixin, generic.CreateView):
 class SingleProject(LoginRequiredMixin, generic.DetailView):
     model = Project
 
+def edit_project_settings(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+
+    form = forms.CreateProjectForm(request.POST or None, instance=project)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('projects:settings', slug=slug)
+    return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
+
+
 def project_settings(request, slug):
     project = Project.objects.get(slug=slug)
     invites = Invitation.objects.filter(project=project)
@@ -66,26 +77,71 @@ def project_invite(request, slug):
     return render(request, template, context)
 
 
+def list_projects(request):
+    projects = Project.objects.filter(members=request.user)
+    invites = Invitation.objects.filter(reciever=request.user)
 
-class ListProjects(LoginRequiredMixin, generic.ListView):
-    model = Project
+    context = {
+        'projects':projects,
+        'invites':invites
+    }
+    return render(request, 'projects/project_list.html', context)
 
-    # this post method is only for deleting projects
-    def post(self, request, *args, **kwargs):
-        for k in request.POST.keys():
-            if k != 'csrfmiddlewaretoken':
-                Project.objects.filter(members=self.request.user, slug=k).delete()
-        return redirect('projects:all')
-
-    def get_queryset(self):
-        return Project.objects.filter(members=self.request.user)
-
-class JoinProject(LoginRequiredMixin, generic.RedirectView):
-    pass
+def delete_invite(request, slug, pk):
+    try:
+        invite = get_object_or_404(Invitation, pk=pk)
+    except ObjectDoesNotExist:
+        messages.warning(self.request, 'Warning: The invite could not be found and therefor not withdrawn')
+    else:
+        invite.delete()
+    return redirect('projects:settings', slug=slug)
 
 class LeaveProject(LoginRequiredMixin, generic.RedirectView):
-    pass
+    def get_redirect_url(self, *args,**kwargs):
+        return reverse('projects:all')
 
+    def get(self, request, *args, **kwargs):
+        project = get_object_or_404(Project, slug=self.kwargs.get('slug'))
+        user = request.user
+        try:
+            membership = get_object_or_404(ProjectMember, project=project, user=user)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, 'Warning: You are not part of this group!')
+        else:
+            membership.delete()
+        return super().get(request, *args,**kwargs)
+
+class DeclineInvite(LoginRequiredMixin, generic.RedirectView):
+    def get_redirect_url(self, *args,**kwargs):
+        return reverse('projects:all')
+
+    def get(self, request, *args,**kwargs):
+        project = get_object_or_404(Project, slug=self.kwargs.get('slug'))
+        try:
+            invite = get_object_or_404(Invitation, reciever=request.user, project=project)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, 'Warning: The invite could not be found and therefor not deleted')
+        else:
+            invite.delete()
+        return super().get(request, *args,**kwargs)
+
+class JoinProject(LoginRequiredMixin, generic.RedirectView):
+    def get_redirect_url(self, *args,**kwargs):
+        return reverse('projects:all')
+
+    def get(self, request,*args,**kwargs):
+        project = get_object_or_404(Project, slug=self.kwargs.get('slug'))
+
+        try:
+            ProjectMember.objects.create(user=self.request.user, project=project)
+        except IntegrityError:
+            messages.warning(self.request, 'Warning: You are already a member of this project!')
+        else:
+            messages.success(self.request, 'Invitation accepted!')
+            invite = get_object_or_404(Invitation, reciever=request.user, project=project)
+            invite.delete()
+
+        return super().get(request, *args,**kwargs)
 
 class DeleteProject(LoginRequiredMixin, generic.DeleteView):
     model = Project

@@ -5,7 +5,7 @@ app_name = 'projects'
 
 
 urlpatterns = [
-    path('', views.ListProjects.as_view(), name='all'),
+    path('', views.list_projects, name='all'),
     path('new/', views.CreateProject.as_view(),name='create'),
     path('<slug:slug>/records/', include('records.urls', namespace='records')),
     path('<slug:slug>/', views.SingleProject.as_view(),name='single'),
@@ -13,7 +13,9 @@ urlpatterns = [
     path('<slug:slug>/invite/', views.project_invite ,name='invite'),
     path('<slug:slug>/delete/', views.DeleteProject.as_view(), name='delete'),
     path('<slug:slug>/settings/', views.project_settings, name='settings'),
+    path('<slug:slug>/settings/update', views.edit_project_settings, name='edit'),
+    path('<slug:slug>/accept-invite/', views.JoinProject.as_view(), name='accept'),
+    path('<slug:slug>/decline-invite/', views.DeclineInvite.as_view(), name='decline'),
+    path('<slug:slug>/withdraw-invite/<int:pk>', views.delete_invite, name='withdraw'),
 
-    # join
-    # invite
 ]

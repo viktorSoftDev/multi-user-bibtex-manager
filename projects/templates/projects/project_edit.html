@@ -1,0 +1,32 @@
+{% extends "projects/project_base.html" %}
+{% load material_form %}
+
+{% block project_content %}
+
+<div class="row">
+  <div class="col s12">
+    <div class="card grey lighten-5">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s12">
+          <span class="card-title center"><h2>Update {{ project.project_title }}</h2></span>
+            <form class="" action="{% url 'projects:edit' slug=project.slug %}" method="POST" id="projectForm">
+              {% csrf_token %}
+              {% form %}{% endform %}
+              <div class="center-align">
+                <button type="submit" name="_submit" class="btn indigo btn-large waves waves-effect">Update Project</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+        <div class="card-action">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

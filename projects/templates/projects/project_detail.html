@@ -45,37 +45,37 @@
                       <div class="row">
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in checkbox-indigo" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
                             <span>Cite Key</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
                             <span>Entry Type</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" value="title"/>
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" value="title"/>
                             <span>Title</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
                             <span>Author</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
                             <span>Journal</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn"  />
                             <span>Editor</span>
                           </label>
                         </div>
@@ -84,38 +84,38 @@
                       <div class="row">
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" />
                             <span>Publisher</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
                             <span>Year</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
+                            <input type="checkbox" class="filled-in toggleColumn" />
                             <span>Month</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
-                            <span>XXXXXXXX</span>
+                            <input type="checkbox" class="filled-in toggleColumn" />
+                            <span>School</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
-                            <span>XXXXXXX</span>
+                            <input type="checkbox" class="filled-in toggleColumn" />
+                            <span>Institution</span>
                           </label>
                         </div>
                         <div class="col s2">
                           <label>
-                            <input type="checkbox" class="filled-in" checked="checked" />
-                            <span>XXXXXXX</span>
+                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
+                            <span>_Actions_</span>
                           </label>
                         </div>
 
@@ -139,41 +139,53 @@
                     <th>Editor</th>
                     <th>Publisher</th>
                     <th>Year</th>
-                    <th></th>
+                    <th>Month</th>
+                    <th>School</th>
+                    <th>Institution</th>
+                    <th>_Actions_</th>
                   </tr>
                 </thead>
                 <!-- END TABLE HEAD -->
                 <tbody>
                   <!-- TABLE BODY -->
                   {% for record in project.records.all  %}
-                    <tr class="clickable-row" data-href="#">
-                      <td>
+                    <tr >
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         <a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a>
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.entry_type %}{{ record.entry_type }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.title %}{{ record.title }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.author %}{{ record.author }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.journal %}{{ record.journal }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.editor %}{{ record.editor }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.publisher %}{{ record.publisher }}{% else %}-{% endif %}
                       </td>
-                      <td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.year %}{{ record.year }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.month %}{{ record.month }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.school %}{{ record.school }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.institution %}{{ record.institution }}{% else %}-{% endif %}
                       </td>
 
 
-                      <td class="">
+                      <td class="right">
                         <a  href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}" class="grey-text tooltipped"
                             data-position="top"
                             data-tooltip="Edit">
@@ -258,60 +270,69 @@
                 <a  class="btn-floating red tooltipped"
                     data-position="left"
                     data-tooltip="Project Settings"
-                    href="#">
+                    href="{% url 'projects:settings' slug=project.slug %}">
                     <i class="material-icons">
                       edit
                     </i>
                   </a>
                 </li>
             </ul>
-          </div>
-
-        </div>
-      </div>
+          </div> <!-- CLOSE fixed-action-btn click-to-toggle -->
+        </div> <!-- CLOSE col s12 -->
+      </div> <!-- CLOSE row -->
 
 
 
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+<!-- SCRIPTS TO BE MOVED TO SEPARATE FILE -->
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.material.min.js"></script>
 <script>
 
-function renderTable(){
+document.addEventListener('change', function() {
+  var col = document.querySelectorAll('.toggleColumn');
+  renderTable(col)
+ });
 
-  for (var i = 0; i < array.length; i++) {
-
+function renderTable(col){
+  columnList = []
+  for (var i = 0; i < col.length; i++) {
+    columnList[i] = {
+      "targets": [i],
+      "visible": col[i].checked,
+      className: 'mdl-data-table__cell--non-numeric',
+    }
   }
+  // Initializing datatables. must be reinitialized every time there is a change
+  // due to how the plugin is configured. therefore destroy = true.
+  $('#example').DataTable({
+    // Thx to datatables.net for this jquery plugin
+    "destroy":true,
+    "order": [[ 2, "asc" ]],
+    "scrollX": true,
+    "sDom": 'frtip',
+    "iDisplayLength": 20,
+    "searchPlaceholder":"something",
+    language: {
+      search: "_INPUT_",
+      searchPlaceholder: "Filter by anything...",
+       "lengthMenu": "Display _MENU_ records",
+    },
+    "columnDefs": columnList
+  });
 }
-
 
 jQuery(document).ready(function($) {
     $('.modal').modal();
-    $('.fixed-action-btn').floatingActionButton({
-    });
-     $('.fixed-action-btn').floatingActionButton('open');
+    $('.fixed-action-btn').floatingActionButton({});
+    $('.fixed-action-btn').floatingActionButton('open');
     $('select').formSelect();
     $('.tooltipped').tooltip({delay:50});
-    $('#example').DataTable({
-      // Thx to datatables.net for this jquery plugin
-      "order": [[ 2, "asc" ]],
-      "scrollX": true,
-      "sDom": 'frtip',
-      "iDisplayLength": 20,
-      "searchPlaceholder":"something",
-      language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Filter by anything...",
-         "lengthMenu": "Display _MENU_ records",
-      },
-      columnDefs: [
-          {
-              targets: [ 0, 1, 2 ],
-              className: 'mdl-data-table__cell--non-numeric',
+    renderTable(document.querySelectorAll('.toggleColumn'));
 
-          }
-      ]
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
     });
-
 
 
 

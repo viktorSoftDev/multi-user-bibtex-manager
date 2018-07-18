@@ -1,8 +1,9 @@
 {% extends "projects/project_base.html" %}
 {% block breadcrumb %}
-
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+<a href="{% url 'projects:settings' slug=project.slug %}" class="breadcrumb">Settings</a>
 {% endblock %}
-
 {% block project_content %}
 
 
@@ -16,6 +17,15 @@
           <div class="col s12">
 
                   <h2 class="center">{{ project.project_title }}</h2>
+                  <h6 class="center">{{ project.description }}</h6><br>
+                  <div class="right-align">
+                    <a class="btn waves-effect btn-medium waves-light indigo" href="{% url 'projects:edit' slug=project.slug %}">
+                      <i class="material-icons left">edit</i>
+                      Edit Description
+                    </a>
+                  </div>
+
+                  <hr>
                   <ul class="collection with-header">
 
                     <li class="collection-header">
@@ -46,7 +56,7 @@
                       <div>
                         <strong>{{ invite.reciever.first_name }} {{ invite.reciever.last_name }}</strong>
                         has been invited by   <strong>{{ invite.sender.first_name }} {{ invite.sender.last_name }}</strong>
-                        <a href="#!" class="secondary-content"><i class="material-icons">delete</i></a>
+                        <a href="{% url 'projects:withdraw' slug=invite.project.slug pk=invite.pk %}" class="secondary-content"><i class="material-icons">delete</i></a>
                       </div>
                     </li>
 
@@ -66,39 +76,62 @@
         </div>
         <div class="card-action">
           <div class="right-align">
-            <a class="btn waves-effect btn-medium waves-light indigo" href="#">
-              <i class="material-icons left">edit</i>
-              Edit
+            <a class="btn waves-effect waves-light orange" href="#leave_project{{ project.pk }}">
+              <i class="material-icons left">block</i>
+              Leave Project
             </a>
-            <a class="btn waves-effect waves-light red darken-3" href="#{{ project.pk }}">
+
+            <a class="btn waves-effect waves-light red darken-3" href="#delete_project{{ project.pk }}">
               <i class="material-icons left">delete</i>
               Delete Project
             </a>
-
-            <div id="{{ project.pk }}" class="modal">
-               <div class="modal-content">
-                 <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
-                 <p class="center-align">Deleting the project will also delete any records
-                 within the project. <br>This will delete the project for
-                 everyone that is a projectmember. <br>To Delete
-                 the project locally; use the 'Leave' option.<br>
-                 Deleting this project can not be reversed.</p>
-               </div>
-               <div class="modal-footer">
-                 <div class="modal-action right-align">
-                   <a href="#!" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
-                 <a href="#" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
-                   <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
-
-                 </div>
-               </div>
-             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+
+<!-- MODALS -->
+
+<div id="leave_project{{ project.pk }}" class="modal">
+  <div class="modal-content">
+    <h4 class="center-align">Are you sure you want to leave '{{ project.project_title }}'</h4>
+    <p class="center-align">
+      Leaving this project means that you lose all access to it.
+      <br> To re-attain access you need to be re-invited.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <div class="modal-action right-align">
+      <a href="" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+      <a href="{% url 'projects:leave' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+    </div>
+  </div>
+</div>
+
+<div id="delete_project{{ project.pk }}" class="modal">
+   <div class="modal-content">
+     <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
+     <p class="center-align">Deleting the project will also delete any records
+     within the project. <br>This will delete the project for
+     everyone that is a projectmember. <br>To Delete
+     the project locally; use the 'Leave' option.<br>
+     Deleting this project can not be reversed.</p>
+   </div>
+   <div class="modal-footer">
+     <div class="modal-action right-align">
+
+       <a href="" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+     <a href="{% url 'projects:leave' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+       <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
+
+     </div>
+   </div>
+ </div>
+
 
 <script>
   $(document).ready(function(){

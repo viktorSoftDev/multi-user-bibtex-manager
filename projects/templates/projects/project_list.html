@@ -23,9 +23,68 @@
               <a href="{% url 'projects:create' %}" class="btn indigo btn-medium waves waves-effect">Create New Project</a>
             </div>
 <br>
+            <div class="list_invites">
+              {% for invite in invites %}
+              <div class="row">
+                <div class="col s12">
+                  <div class="card hoverable blue-grey lighten-1">
+                    <div class="card-content white-text">
+                        <span class="card-title left">{{ invite.project.project_title.upper }}
+                          <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ invite.project.members.count }}</span>
+                          <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ invite.project.records.count }}</span>
+                          <span class="new badge amber darken-2">   </span>
+                        </span>
+
+                        <div class="row">
+                          <div class="col s12">
+                            <hr>
+                            <p>{{ invite.sender.first_name }} {{ invite.sender.last_name }}
+                            sent you this invite!</p>
+                            <p>{{ invite.message }}</p>
+
+
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="card-action">
+                        <div class="row">
+                          <div class="col s6">
+                            <a class="btn waves-effect waves-light cyan darken-2 left" href="#">
+                              <i class="material-icons left">visibility</i>
+                              View Project
+                            </a>
+                          </div>
+                          <div class="col s6">
+                            <div class="right-align">
+                              <a class="btn waves-effect waves-light grey" href="{% url 'projects:decline' slug=invite.project.slug %}">
+                                <i class="material-icons left">clear</i>
+                                decline
+                              </a>
+                              <a class="btn waves-effect waves-light indigo darken-3" href="{% url 'projects:accept' slug=invite.project.slug %}">
+                                <i class="material-icons left">done</i>
+                                Accept
+                              </a>
+                            </div>
+
+
+                          </div>
+
+                        </div>
+
+                      </div>
+
+
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+
+            </div>
+<!-- ############################################### -->
 
             <div class="list_project">
-                {% for project in object_list  %}
+                {% for project in projects  %}
                   <div class="row">
                     <div class="col s12">
                       <div class="card hoverable blue-grey darken-1">
@@ -59,7 +118,7 @@
                                     <i class="material-icons left">build</i>
                                     Project Settings
                                   </a>
-                                  
+
 
                                   <div id="{{ project.pk }}" class="modal">
                                      <div class="modal-content">

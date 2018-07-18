@@ -25,3 +25,5 @@ class InviteForm(forms.Form):
             User.objects.get(email=email)
         except ObjectDoesNotExist:
             raise forms.ValidationError('No user with email ' + email + ' exists' )
+
+        
