@@ -1,4 +1,5 @@
 {% extends "projects/project_base.html" %}
+{% load static %}
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
@@ -35,7 +36,8 @@
                       </li>
                     {% for member in members %}
                       <li class="collection-item avatar">
-                        <img src="" alt="avatar" class="circle">
+
+                        <img src="{% static 'images/usericon.svg' %}" alt="avatar" class="circle"></img>
                         <span class="title">{{ member.first_name }} {{ member.last_name }}</span>
                         <p>{{ member.email }}<br>
                           Admin / Read&Write / ReadOnly

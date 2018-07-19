@@ -1,6 +1,12 @@
 {% extends "projects/project_base.html" %}
 {% load material_form %}
+{% block breadcrumb %}
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+<a href="{% url 'projects:settings' slug=project.slug %}" class="breadcrumb">Settings</a>
+<a href="{% url 'projects:edit' slug=project.slug %}" class="breadcrumb">Edit</a>
 
+{% endblock %}
 {% block project_content %}
 
 <div class="row">

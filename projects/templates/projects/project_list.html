@@ -30,8 +30,8 @@
                   <div class="card hoverable blue-grey lighten-1">
                     <div class="card-content white-text">
                         <span class="card-title left">{{ invite.project.project_title.upper }}
-                          <span class="new badge grey" data-badge-caption="Member{{ project.members.count|pluralize }}">{{ invite.project.members.count }}</span>
-                          <span class="new badge grey" data-badge-caption="Record{{ project.records.count|pluralize }}">{{ invite.project.records.count }}</span>
+                          <span class="new badge grey" data-badge-caption="Member{{ invite.project.members.count|pluralize }}">{{ invite.project.members.count }}</span>
+                          <span class="new badge grey" data-badge-caption="Record{{ invite.project.records.count|pluralize }}">{{ invite.project.records.count }}</span>
                           <span class="new badge amber darken-2">   </span>
                         </span>
 
@@ -48,14 +48,11 @@
 
                       </div>
                       <div class="card-action">
-                        <div class="row">
-                          <div class="col s6">
-                            <a class="btn waves-effect waves-light cyan darken-2 left" href="#">
-                              <i class="material-icons left">visibility</i>
-                              View Project
-                            </a>
-                          </div>
-                          <div class="col s6">
+
+
+
+
+
                             <div class="right-align">
                               <a class="btn waves-effect waves-light grey" href="{% url 'projects:decline' slug=invite.project.slug %}">
                                 <i class="material-icons left">clear</i>
@@ -65,12 +62,12 @@
                                 <i class="material-icons left">done</i>
                                 Accept
                               </a>
-                            </div>
+
 
 
                           </div>
 
-                        </div>
+
 
                       </div>
 

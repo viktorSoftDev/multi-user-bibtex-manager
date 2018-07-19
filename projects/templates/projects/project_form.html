@@ -1,5 +1,10 @@
 {% extends "projects/project_base.html" %}
 {% load material_form %}
+{% block breadcrumb %}
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+<a href="{% url 'projects:create' %}" class="breadcrumb">New Project</a>
+
+{% endblock %}
 
 {% block project_content %}
 
