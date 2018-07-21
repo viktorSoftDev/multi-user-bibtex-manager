@@ -10,6 +10,8 @@ class GeneralRecordForm(forms.Form):
     entry_type = forms.ChoiceField(choices=ENTRY_TYPE_CHOICES, required=True)
     cite_key = forms.CharField(required=True)
 
+    layout = Layout(Row('entry_type','cite_key'))
+
 class SpecificRecordForm(forms.Form):
 
     def __init__(self,*args,**kwargs):

@@ -17,11 +17,14 @@
         </span>
         <form id="record_form" class="" action="{% url 'projects:records:create' slug=project.slug %}" method="POST">
           {% csrf_token %}
-          {% form form=form1 %}{% endform %}
+  {% form form=form1 %}{% endform %}
           <div id="form2div">
             {% if err %}{% form form=form %}{% endform %}{% endif %}<!-- Here comes the specific form through ajax. --> </div>
 
-          <div class="center-align">
+            <div class="test">
+
+            </div>
+          <div class="center-align" id="submit_button" hidden>
             <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light">ADD RECORD</button>
           </div>
         </form>
@@ -31,6 +34,36 @@
 </div>
 
     <script>
+
+    // var form = [
+    //     {
+    //       name:"entry_type",
+    //       label:"Entry Type",
+    //       value:""
+    //     },
+    //     {
+    //       name:"cite_key",
+    //       label:"Cite Key",
+    //       value:""
+    //     }
+    // ]
+    //
+    // function renderForm(form) {
+    //   var htmlString ="";
+    //     for (var field in form) {
+    //       alert(form[field].name);
+    //       htmlString += '<input id="id_'+form[field].name+'" type="text" name="'+form[field].name+'" value="">'
+    //       htmlString += '<label for="id_'+form[field].name+'">'+form[field].label+'</label>'
+    //
+    //     }
+    //     document.querySelector('.test').innerHTML = htmlString;
+    // }
+    //
+    // renderForm(form);
+
+
+
+
       var form_urls ={
         'article' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='article' %}",
         'book' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='book' %}",
@@ -47,15 +80,42 @@
         'techreport' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='techreport' %}",
         'unpublished' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='unpublished' %}",
     }
-      $(document).ready(function(){
-        $('#id_entry_type').change( function(event){
-            const v = $('#id_entry_type').val().toString()
-            console.log(v);
-            let url_string = form_urls[v];
-            $.get({'url': url_string}).done( function(data) {
-                    document.getElementById('form2div').innerHTML = data;
-            });
+
+    function get_form(){
+      let v = $('#id_entry_type').val().toString()
+      let url_string = form_urls[v];
+      if (v < "------------") {
+        console.log(v);
+        document.getElementById('form2div').innerHTML = "";
+        $('#submit_button').hide();
+      }
+      else {
+        var formData = $('#record_form').serialize();
+        $.ajax({
+            type: 'POST',
+            url: url_string,
+            data: formData
+        }).done(function (data) {
+          document.getElementById('form2div').innerHTML = data;
+
         });
+        // $.get({'url': url_string}).done( function(data) {
+        //         document.getElementById('form2div').innerHTML = data;
+        // });
+        $('id_author').change( function() {
+          alert("change");
+        });
+        $('#submit_button').show();
+
+      }
+    };
+
+
+      $(document).ready(function(){
+        $('#id_entry_type').change(function(){
+          get_form();
+        });
+
       });
     </script>
 

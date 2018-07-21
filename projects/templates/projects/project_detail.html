@@ -163,7 +163,7 @@
                           data-tooltip="{{ record.title }}"
                           data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.title %}
-                          {{ record.title|truncatechars:20 }}
+                          {{ record.title|truncatechars:30 }}
                           <!-- This is only to be able to filter on the whole title -->
                           <span hidden>{{ record.title }}</span>
                         {% else %}
@@ -175,7 +175,7 @@
                           data-tooltip="{{ record.author }}"
                           data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.author %}
-                          {{ record.author|truncatechars:20 }}
+                          {{ record.author|truncatechars:30 }}
                           <!-- This is only to be able to filter on the whole title -->
                           <span hidden>{{ record.author }}</span>
                         {% else %}
@@ -220,7 +220,7 @@
                             data-tooltip="Edit">
                           <i class="material-icons">edit</i>
                         </a>
-                        <a href="#!" class="grey-text tooltipped"
+                        <a href="{% url 'projects:records:clone' slug=project.slug pk=record.pk %}" class="grey-text tooltipped"
                             data-position="top"
                             data-tooltip="Copy">
                           <i class="material-icons">content_copy</i>
