@@ -157,7 +157,7 @@ def create_record(request, slug):
 
 def specific_form_ajax(request, slug, entry):
     entry = entry
-    print(request)
+
     form = forms.SpecificRecordForm(request.POST,entry=entry)
     context = {'form':form}
     template = 'records/form_ajax.html'

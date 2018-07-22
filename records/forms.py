@@ -18,7 +18,12 @@ class SpecificRecordForm(forms.Form):
         entry = kwargs.pop('entry')
         super().__init__(*args,**kwargs)
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
-            self.fields[fieldname] = forms.CharField()
+            if fieldname == 'author':
+                self.fields[fieldname] = forms.CharField(widget=forms.TextInput(attrs={
+                                                                                    'placeholder':"             Add multiple authors separated with ' and '",
+                                                                                    }))
+            else:
+                self.fields[fieldname] = forms.CharField()
             self.fields[fieldname].required = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
@@ -26,6 +31,27 @@ class SpecificRecordForm(forms.Form):
             self.fields[fieldname].required = False
 
         self.layout = FORM_LAYOUT[entry]
+
+class AuthorWidget(forms.TextInput):
+    class Media:
+        js = ('js/form_action.js')
+
+
+class ArticleForm(forms.Form):
+    title = forms.CharField(required=True)
+    author = forms.CharField(required=True,
+                            max_length=100,
+                            widget=forms.TextInput(attrs={
+                                'onkeydown':'addField(this)',
+                            }))
+    journal = forms.CharField(required=True)
+    year = forms.IntegerField(required=True)
+    volume = forms.CharField(required=False)
+    number = forms.CharField(required=False)
+    pages = forms.CharField(required=False)
+    month = forms.CharField(required=False)
+    note = forms.CharField(required=False)
+
 
 class ShowRecordForm(forms.ModelForm):
     class Meta:
