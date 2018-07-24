@@ -23,6 +23,13 @@ class Project(models.Model):
     # RW_users for different permissions
     members = models.ManyToManyField(User, through="ProjectMember")
 
+
+
+    def project_directory_path(self, filename, type):
+        return 'project_{0}/{1}/{3}'.format(self.slug, type, filename)
+
+
+
     def __str__(self):
         return self.project_title
 

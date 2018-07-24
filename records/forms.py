@@ -32,26 +32,6 @@ class SpecificRecordForm(forms.Form):
 
         self.layout = FORM_LAYOUT[entry]
 
-class AuthorWidget(forms.TextInput):
-    class Media:
-        js = ('js/form_action.js')
-
-
-class ArticleForm(forms.Form):
-    title = forms.CharField(required=True)
-    author = forms.CharField(required=True,
-                            max_length=100,
-                            widget=forms.TextInput(attrs={
-                                'onkeydown':'addField(this)',
-                            }))
-    journal = forms.CharField(required=True)
-    year = forms.IntegerField(required=True)
-    volume = forms.CharField(required=False)
-    number = forms.CharField(required=False)
-    pages = forms.CharField(required=False)
-    month = forms.CharField(required=False)
-    note = forms.CharField(required=False)
-
 
 class ShowRecordForm(forms.ModelForm):
     class Meta:

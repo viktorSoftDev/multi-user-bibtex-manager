@@ -281,7 +281,7 @@
                 <a  class="btn-floating yellow darken-2 tooltipped"
                     data-position="left"
                     data-tooltip="Import File"
-                    href="#">
+                    href="{% url 'projects:import' slug=project.slug %}">
                     <i class="material-icons">
                       file_upload
                     </i>

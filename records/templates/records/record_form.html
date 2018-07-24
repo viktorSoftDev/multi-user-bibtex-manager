@@ -60,48 +60,51 @@
     // }
     //
     // renderForm(form);
-    var authorfields = 0;
-    function addField(el){
-      console.log(el);
-      console.log(el.value.length);
-      if (el.value.length === 1){
-          var div = document.createElement("div");
-          div.class = "input-field col s11";
-          var node = document.createElement("input");
-          node.setAttribute("placeholder", "Add an additional author");
-          node.setAttribute("class", "new-author-field");
-          node.setAttribute("type", "text");
-          node.setAttribute("onkeydown", "NewField(this)");
-          div.appendChild(node);
 
-          console.log(el.parentNode);
-          var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
-          authorfields +=1;
-      };
-    };
 
-    function NewField(el){
-      if (el.value.length === 0){
-        console.log("zero");
-        // if filled in add a new field
-
-        // else if empty delete next IF next is empty
-        console.log('authorfields: ' + authorfields);
-        console.log('nodes: ' + el.parentNode.parentNode.childNodes.length);
-        if (el.parentNode.childNodes.length == authorfields){
-          var div = document.createElement("div");
-          div.class = "input-field col s12";
-          var node = document.createElement("input");
-          node.setAttribute("placeholder", "Add an additional author");
-          node.setAttribute("class", "new-author-field");
-          node.setAttribute("type", "text");
-          node.setAttribute("onkeydown", "NewField(this)");
-          div.appendChild(node);
-          var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
-          authorfields += 1;
-        };
-      };
-    };
+    // MIGHT work
+    // var authorfields = 0;
+    // function addField(el){
+    //   console.log(el);
+    //   console.log(el.value.length);
+    //   if (el.value.length === 1){
+    //       var div = document.createElement("div");
+    //       div.class = "input-field col s11";
+    //       var node = document.createElement("input");
+    //       node.setAttribute("placeholder", "Add an additional author");
+    //       node.setAttribute("class", "new-author-field");
+    //       node.setAttribute("type", "text");
+    //       node.setAttribute("onkeydown", "NewField(this)");
+    //       div.appendChild(node);
+    //
+    //       console.log(el.parentNode);
+    //       var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
+    //       authorfields +=1;
+    //   };
+    // };
+    //
+    // function NewField(el){
+    //   if (el.value.length === 0){
+    //     console.log("zero");
+    //     // if filled in add a new field
+    //
+    //     // else if empty delete next IF next is empty
+    //     console.log('authorfields: ' + authorfields);
+    //     console.log('nodes: ' + el.parentNode.parentNode.childNodes.length);
+    //     if (el.parentNode.childNodes.length == authorfields){
+    //       var div = document.createElement("div");
+    //       div.class = "input-field col s12";
+    //       var node = document.createElement("input");
+    //       node.setAttribute("placeholder", "Add an additional author");
+    //       node.setAttribute("class", "new-author-field");
+    //       node.setAttribute("type", "text");
+    //       node.setAttribute("onkeydown", "NewField(this)");
+    //       div.appendChild(node);
+    //       var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
+    //       authorfields += 1;
+    //     };
+    //   };
+    // };
 
 
       var form_urls ={

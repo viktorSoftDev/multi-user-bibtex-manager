@@ -17,5 +17,6 @@ urlpatterns = [
     path('<slug:slug>/accept-invite/', views.JoinProject.as_view(), name='accept'),
     path('<slug:slug>/decline-invite/', views.DeclineInvite.as_view(), name='decline'),
     path('<slug:slug>/withdraw-invite/<int:pk>', views.delete_invite, name='withdraw'),
+    path('<slug:slug>/import/', views.project_import_file, name='import'),
 
 ]

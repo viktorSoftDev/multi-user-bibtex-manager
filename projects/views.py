@@ -2,15 +2,25 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from projects.models import Project, ProjectMember, Invitation
+from records.models import Record
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from braces.views import SelectRelatedMixin
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
-
+from django.core.files.storage import FileSystemStorage
+from . import parse
 # Create your views here.
 from . import forms
+
+import bibtexparser
+from pylatexenc.latex2text import LatexNodes2Text
+from pylatexenc.latexencode import utf8tolatex
+import os
+from mubm import settings
+
+
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -31,15 +41,6 @@ class CreateProject(LoginRequiredMixin, generic.CreateView):
 class SingleProject(LoginRequiredMixin, generic.DetailView):
     model = Project
 
-def edit_project_settings(request, slug):
-    project = get_object_or_404(Project, slug=slug)
-
-    form = forms.CreateProjectForm(request.POST or None, instance=project)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('projects:settings', slug=slug)
-    return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
 
 
 def project_settings(request, slug):
@@ -53,6 +54,16 @@ def project_settings(request, slug):
     }
     template = 'projects/project_settings.html'
     return render(request, template, context)
+
+def edit_project_settings(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+
+    form = forms.CreateProjectForm(request.POST or None, instance=project)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('projects:settings', slug=slug)
+    return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
 
 def project_invite(request, slug):
     project = Project.objects.get(slug=slug)
@@ -75,6 +86,41 @@ def project_invite(request, slug):
     context['form'] = form
     template = 'projects/project_invite.html'
     return render(request, template, context)
+
+def project_import_file(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+    context = {'project':project}
+    if request.method == 'POST' and request.FILES['import_file']:
+        if request.FILES['import_file'].name.endswith('.bib'):
+            importedfile = request.FILES['import_file']
+
+            fs = FileSystemStorage()
+            filename = fs.save('imported/'+project.slug+'/'+importedfile.name, importedfile)
+            """
+            Populate the project with the new records!
+            """
+            with open(os.path.join(settings.MEDIA_ROOT, filename)) as bibtex_file:
+                bibtex_database = bibtexparser.load(bibtex_file)
+
+            for entry in bibtex_database.entries:
+                r = Record()
+                r.entry_type = entry['ENTRYTYPE']
+                r.cite_key = entry['ID']
+                r.project = project
+                fields = entry.items()
+                for key, value in fields:
+                    if key != 'ID' or key != 'ENTRYTYPE':
+                        setattr(r, key, LatexNodes2Text().latex_to_text(value))
+                r.save()
+
+            os.remove(os.path.join(settings.MEDIA_ROOT, filename))
+            return redirect('projects:single', slug=slug)
+        else:
+            pass
+            # wrong file format
+
+    return render(request, 'projects/project_import_file.html', context)
+
 
 
 def list_projects(request):
