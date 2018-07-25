@@ -10,17 +10,20 @@ from braces.views import SelectRelatedMixin
 from django.contrib.auth.mixins import (LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.core.files.storage import FileSystemStorage
-from . import parse
+from django.forms.models import model_to_dict
+
 # Create your views here.
 from . import forms
-
+from datetime import datetime
 import bibtexparser
+from bibtexparser.bibdatabase import BibDatabase
 from pylatexenc.latex2text import LatexNodes2Text
 from pylatexenc.latexencode import utf8tolatex
 import os
-from mubm import settings
-
-
+from django.conf import settings
+from django.http import HttpResponse
+from records import data
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -33,7 +36,7 @@ class CreateProject(LoginRequiredMixin, generic.CreateView):
         if form.is_valid():
             project = form.save()
             user = self.request.user
-            pm = ProjectMember.objects.get_or_create(project=project, user=user)[0]
+            pm = ProjectMember.objects.get_or_create(project=project, user=user, is_owner=True)[0]
             pm.save()
             return redirect('projects:single', slug=project.slug)
 
@@ -42,20 +45,24 @@ class SingleProject(LoginRequiredMixin, generic.DetailView):
     model = Project
 
 
-
+@login_required
 def project_settings(request, slug):
     project = Project.objects.get(slug=slug)
     invites = Invitation.objects.filter(project=project)
-    members = project.members.all()
+    memberships = project.memberships.all()
     context = {
         'project':project,
-        'members':members,
-        'invites':invites
+        'invites':invites,
+        'memberships':memberships
     }
     template = 'projects/project_settings.html'
     return render(request, template, context)
 
+@login_required
 def edit_project_settings(request, slug):
+    """
+    Only admin
+    """
     project = get_object_or_404(Project, slug=slug)
 
     form = forms.CreateProjectForm(request.POST or None, instance=project)
@@ -65,7 +72,11 @@ def edit_project_settings(request, slug):
             return redirect('projects:settings', slug=slug)
     return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
 
+@login_required
 def project_invite(request, slug):
+    """
+    Only admin
+    """
     project = Project.objects.get(slug=slug)
     context = {
         'project':project
@@ -79,15 +90,20 @@ def project_invite(request, slug):
             inv.project = project
             inv.reciever = User.objects.get(email=request.POST['email'])
             inv.message = request.POST['message']
+            setattr(inv, request.POST['permission'], True)
             inv.save()
             return redirect('projects:settings', slug=slug)
 
-    form = forms.InviteForm(request.POST or None)
+    form = forms.InviteForm(request.POST or None, initial={'permission': 'is_editor'})
     context['form'] = form
     template = 'projects/project_invite.html'
     return render(request, template, context)
 
+@login_required
 def project_import_file(request, slug):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     project = get_object_or_404(Project, slug=slug)
     context = {'project':project}
     if request.method == 'POST' and request.FILES['import_file']:
@@ -109,7 +125,9 @@ def project_import_file(request, slug):
                 r.project = project
                 fields = entry.items()
                 for key, value in fields:
-                    if key != 'ID' or key != 'ENTRYTYPE':
+                    if key == 'ID' or key == 'ENTRYTYPE':
+                        pass
+                    else:
                         setattr(r, key, LatexNodes2Text().latex_to_text(value))
                 r.save()
 
@@ -122,7 +140,49 @@ def project_import_file(request, slug):
     return render(request, 'projects/project_import_file.html', context)
 
 
+@login_required
+def project_export_file(request, slug):
+    project = get_object_or_404(Project, slug=slug)
+    records = project.records.all()
 
+    bib_database = BibDatabase()
+    bib_database.entries = [None for x in range(records.count())]
+
+    # create a dict with all entries
+    i = 0
+    for record in records: # iterating through all records
+        entry_dict = {
+            'ID':record.cite_key,
+            'ENTRYTYPE':record.entry_type} # reading the ID and entry_type
+        fields = model_to_dict(record).items()      # create a dict of the model data1
+        for key, val in fields:             # iterate through the dict
+
+            if key in data.FIELDS and (key != 'cite_key' or key != 'entry_type'):
+                if val:
+                    entry_dict[key] = utf8tolatex(val) # enter key and latex val
+        bib_database.entries[i] = entry_dict       # populate the temp bib database
+        i = i + 1
+    # when done bib_database should contain all of the project's records
+    # now create a string of it to write to file
+    bib_string = bibtexparser.dumps(bib_database)
+    fs = FileSystemStorage()
+    with open(os.path.join(settings.MEDIA_ROOT, 'exported/'+ project.slug +'.bib'), 'w') as bibtex_file:
+        bibtexparser.dump(bib_database, bibtex_file)
+
+    """
+        The following snippet was heavily inspired by the highest rated answer
+        from this stackoverflow post
+        https://stackoverflow.com/questions/36392510/django-download-a-file
+    """
+    file_path = os.path.join(settings.MEDIA_ROOT, 'exported/'+ project.slug +'.bib')
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/bib")
+            response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+            return response
+    raise Http404
+
+@login_required
 def list_projects(request):
     projects = Project.objects.filter(members=request.user)
     invites = Invitation.objects.filter(reciever=request.user)
@@ -133,7 +193,11 @@ def list_projects(request):
     }
     return render(request, 'projects/project_list.html', context)
 
+@login_required
 def delete_invite(request, slug, pk):
+    """
+    Only admin
+    """
     try:
         invite = get_object_or_404(Invitation, pk=pk)
     except ObjectDoesNotExist:
@@ -177,19 +241,25 @@ class JoinProject(LoginRequiredMixin, generic.RedirectView):
 
     def get(self, request,*args,**kwargs):
         project = get_object_or_404(Project, slug=self.kwargs.get('slug'))
-
+        invite = get_object_or_404(Invitation, reciever=request.user, project=project)
         try:
-            ProjectMember.objects.create(user=self.request.user, project=project)
+            ProjectMember.objects.create(user=self.request.user,
+                                        project=project,
+                                        is_owner=invite.is_owner,
+                                        is_editor=invite.is_editor,
+                                        is_reader=invite.is_reader)
         except IntegrityError:
             messages.warning(self.request, 'Warning: You are already a member of this project!')
         else:
             messages.success(self.request, 'Invitation accepted!')
-            invite = get_object_or_404(Invitation, reciever=request.user, project=project)
             invite.delete()
 
         return super().get(request, *args,**kwargs)
 
 class DeleteProject(LoginRequiredMixin, generic.DeleteView):
+    """
+    Only admin 
+    """
     model = Project
 
     success_url = reverse_lazy('projects:all')

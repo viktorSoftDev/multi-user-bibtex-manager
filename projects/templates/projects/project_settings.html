@@ -34,13 +34,19 @@
                         <h4>Project Members</h4>
 
                       </li>
-                    {% for member in members %}
+                    {% for member in memberships %}
                       <li class="collection-item avatar">
 
                         <img src="{% static 'images/usericon.svg' %}" alt="avatar" class="circle"></img>
-                        <span class="title">{{ member.first_name }} {{ member.last_name }}</span>
-                        <p>{{ member.email }}<br>
-                          Admin / Read&Write / ReadOnly
+                        <span class="title">{{ member.user.first_name }} {{ member.user.last_name }}</span>
+                        <p>{{ member.user.email }}<br>
+                        {% if member.is_owner %}
+                          Admin
+                        {% elif member.is_editor %}
+                          Read&write
+                        {% elif member.is_reader %}
+                          ReadOnly
+                        {% endif %}
                         </p>
                         <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
                       </li>

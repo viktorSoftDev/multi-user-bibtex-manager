@@ -10,6 +10,7 @@ from django.core import serializers
 from django.forms.models import model_to_dict
 from records.data import *
 from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -20,8 +21,11 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-
+@login_required
 def record_detail(request, slug, pk):
+    """
+    requires no extra backend access control
+    """
     record = get_object_or_404(models.Record, pk=pk)
     project = models.Project.objects.get(slug=slug)
     template = 'records/record_detail.html'
@@ -35,8 +39,11 @@ def record_detail(request, slug, pk):
 
     return render(request,template,context)
 
-
+@login_required
 def clone_record(request, slug, pk):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     project = get_object_or_404(models.Project, slug=slug)
     record = get_object_or_404(models.Record, pk=pk)
 
@@ -71,8 +78,11 @@ def clone_record(request, slug, pk):
     }
     return render(request, 'records/record_copy.html', context)
 
-
+@login_required
 def edit_record(request, slug, pk):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     project = get_object_or_404(models.Project, slug=slug)
     record = get_object_or_404(models.Record, pk=pk)
     if request.method == 'POST':
@@ -113,12 +123,20 @@ def edit_record(request, slug, pk):
     }
     return render(request, 'records/record_edit.html', context)
 
+@login_required
 def delete_record(request, slug, pk):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     record = get_object_or_404(models.Record, pk=pk)
     models.Record.objects.filter(project=get_object_or_404(models.Project, slug=slug), pk=pk).delete()
     return redirect('projects:single', slug=slug)
 
+@login_required
 def create_record(request, slug):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     project = get_object_or_404(models.Project, slug=slug)
     form1 = forms.GeneralRecordForm(request.POST or None)
 
@@ -155,7 +173,11 @@ def create_record(request, slug):
             }
     return render(request, 'records/record_form.html', context)
 
+@login_required
 def specific_form_ajax(request, slug, entry):
+    """
+    Only admin and readwrite should be allowed to do this
+    """
     entry = entry
 
     form = forms.SpecificRecordForm(request.POST,entry=entry)

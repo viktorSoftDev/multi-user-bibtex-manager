@@ -25,11 +25,6 @@ class Project(models.Model):
 
 
 
-    def project_directory_path(self, filename, type):
-        return 'project_{0}/{1}/{3}'.format(self.slug, type, filename)
-
-
-
     def __str__(self):
         return self.project_title
 
@@ -46,6 +41,9 @@ class Project(models.Model):
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='user_projects', on_delete=models.CASCADE)
+    is_owner = models.BooleanField(default=False)
+    is_editor = models.BooleanField(default=False)
+    is_reader = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -59,6 +57,8 @@ class Invitation(models.Model):
     sender = models.ForeignKey(User, related_name='user_invites_sent', on_delete=models.CASCADE)
     reciever = models.ForeignKey(User, related_name='user_invites_recieved', on_delete=models.CASCADE)
     message = models.TextField(max_length=500)
-
+    is_owner = models.BooleanField(default=False)
+    is_editor = models.BooleanField(default=False)
+    is_reader = models.BooleanField(default=False)
     def __str__(self):
         return self.project.project_title + ' invitation from '+ self.sender.first_name + ' to ' + self.reciever.first_name

@@ -18,5 +18,6 @@ urlpatterns = [
     path('<slug:slug>/decline-invite/', views.DeclineInvite.as_view(), name='decline'),
     path('<slug:slug>/withdraw-invite/<int:pk>', views.delete_invite, name='withdraw'),
     path('<slug:slug>/import/', views.project_import_file, name='import'),
+    path('<slug:slug>/export/', views.project_export_file, name='export'),
 
 ]

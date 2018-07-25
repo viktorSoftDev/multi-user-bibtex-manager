@@ -14,9 +14,14 @@ class CreateProjectForm(forms.ModelForm):
 
 
 class InviteForm(forms.Form):
+    PERM_CHOICES = (
+        ('is_owner','Admin'),
+        ('is_editor','Read&Write'),
+        ('is_reader','ReadOnly'),
+    )
     email = forms.EmailField(label="Send an invitation by entering your collegue's Email")
     message = forms.CharField(label="Message", required=False)
-
+    permission = forms.ChoiceField(label="Permission", choices=PERM_CHOICES)
     def clean(self):
         cleaned_data = super(InviteForm, self).clean()
         email = cleaned_data.get('email')
@@ -25,5 +30,3 @@ class InviteForm(forms.Form):
             User.objects.get(email=email)
         except ObjectDoesNotExist:
             raise forms.ValidationError('No user with email ' + email + ' exists' )
-
-        

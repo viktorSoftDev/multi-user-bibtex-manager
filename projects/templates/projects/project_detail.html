@@ -291,7 +291,7 @@
                 <a  class="btn-floating green tooltipped"
                     data-position="left"
                     data-tooltip="Export Project"
-                    href="#">
+                    href="{% url 'projects:export' slug=project.slug %}">
                     <i class="material-icons">
                       file_download
                     </i>
