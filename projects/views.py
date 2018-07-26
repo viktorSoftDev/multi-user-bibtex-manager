@@ -42,18 +42,26 @@ class CreateProject(LoginRequiredMixin, generic.CreateView):
 
 
 class SingleProject(LoginRequiredMixin, generic.DetailView):
-    model = Project
+    """
+    Remake into function based view..
+    """
 
+    model = Project
 
 @login_required
 def project_settings(request, slug):
+    """
+    All members can access this view, template will ensure it only
+    reveals availible views
+    """
     project = Project.objects.get(slug=slug)
     invites = Invitation.objects.filter(project=project)
     memberships = project.memberships.all()
     context = {
         'project':project,
         'invites':invites,
-        'memberships':memberships
+        'memberships':memberships,
+        'userperm':project.memberships.get(user=request.user)
     }
     template = 'projects/project_settings.html'
     return render(request, template, context)
@@ -61,43 +69,82 @@ def project_settings(request, slug):
 @login_required
 def edit_project_settings(request, slug):
     """
-    Only admin
+    Only admin can access this method
     """
     project = get_object_or_404(Project, slug=slug)
+    if ProjectMember.objects.get(user=request.user, project=project).is_owner:
 
-    form = forms.CreateProjectForm(request.POST or None, instance=project)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('projects:settings', slug=slug)
-    return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
+
+        form = forms.CreateProjectForm(request.POST or None, instance=project)
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return redirect('projects:settings', slug=slug)
+        return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
+    else:
+        return HttpResponse("You don't have the permission to do this")
+
+
+def edit_project_member(request, slug, pk):
+    """
+    Only admin
+    """
+    user = User.objects.get(pk=pk)
+    project = Project.objects.get(slug=slug)
+    if ProjectMember.objects.get(user=request.user, project=project).is_owner:
+        projectmember = ProjectMember.objects.get(user=user, project=project)
+        if request.method == 'POST':
+            form = forms.ProjectMemberForm(request.POST)
+            if form.is_valid():
+                setattr(projectmember, request.POST['permission'], True)
+                projectmember.save()
+                return redirect('projects:settings', slug=slug)
+
+        if projectmember.is_owner:
+            permission = 'is_owner'
+        elif projectmember.is_editor:
+            permission = 'is_editor'
+        else:
+            permission = 'is_reader'
+        form = forms.ProjectMemberForm(request.POST or None, initial={'permission':permission})
+        context = {
+            'form':form,
+            'projectmember':projectmember,
+            'project':project
+        }
+        return render(request, 'projects/project_member_form.html', context)
+    else:
+        return HttpResponse("You don't have the permission to do this")
 
 @login_required
 def project_invite(request, slug):
     """
-    Only admin
+    Only admin can access this view
     """
     project = Project.objects.get(slug=slug)
-    context = {
-        'project':project
-    }
+    if ProjectMember.objects.get(user=request.user, project=project).is_owner:
+        context = {
+            'project':project
+        }
 
-    if request.method == 'POST':
-        form = forms.InviteForm(request.POST)
-        if form.is_valid():
-            inv = Invitation()
-            inv.sender = request.user
-            inv.project = project
-            inv.reciever = User.objects.get(email=request.POST['email'])
-            inv.message = request.POST['message']
-            setattr(inv, request.POST['permission'], True)
-            inv.save()
-            return redirect('projects:settings', slug=slug)
+        if request.method == 'POST':
+            form = forms.InviteForm(request.POST, project=project)
+            if form.is_valid():
+                inv = Invitation()
+                inv.sender = request.user
+                inv.project = project
+                inv.reciever = User.objects.get(email=request.POST['email'])
+                inv.message = request.POST['message']
+                setattr(inv, request.POST['permission'], True)
+                inv.save()
+                return redirect('projects:settings', slug=slug)
 
-    form = forms.InviteForm(request.POST or None, initial={'permission': 'is_editor'})
-    context['form'] = form
-    template = 'projects/project_invite.html'
-    return render(request, template, context)
+        form = forms.InviteForm(request.POST or None, initial={'permission': 'is_editor'},  project=project)
+        context['form'] = form
+        template = 'projects/project_invite.html'
+        return render(request, template, context)
+    else:
+        return HttpResponse("You don't have the permission to do this")
 
 @login_required
 def project_import_file(request, slug):
@@ -105,43 +152,49 @@ def project_import_file(request, slug):
     Only admin and readwrite should be allowed to do this
     """
     project = get_object_or_404(Project, slug=slug)
-    context = {'project':project}
-    if request.method == 'POST' and request.FILES['import_file']:
-        if request.FILES['import_file'].name.endswith('.bib'):
-            importedfile = request.FILES['import_file']
+    pm = ProjectMember.objects.get(user=request.user, project=project)
+    if user.is_owner or user.is_editor:
+        context = {'project':project}
+        if request.method == 'POST' and request.FILES['import_file']:
+            if request.FILES['import_file'].name.endswith('.bib'):
+                importedfile = request.FILES['import_file']
 
-            fs = FileSystemStorage()
-            filename = fs.save('imported/'+project.slug+'/'+importedfile.name, importedfile)
-            """
-            Populate the project with the new records!
-            """
-            with open(os.path.join(settings.MEDIA_ROOT, filename)) as bibtex_file:
-                bibtex_database = bibtexparser.load(bibtex_file)
+                fs = FileSystemStorage()
+                filename = fs.save('imported/'+project.slug+'/'+importedfile.name, importedfile)
+                """
+                Populate the project with the new records!
+                """
+                with open(os.path.join(settings.MEDIA_ROOT, filename)) as bibtex_file:
+                    bibtex_database = bibtexparser.load(bibtex_file)
 
-            for entry in bibtex_database.entries:
-                r = Record()
-                r.entry_type = entry['ENTRYTYPE']
-                r.cite_key = entry['ID']
-                r.project = project
-                fields = entry.items()
-                for key, value in fields:
-                    if key == 'ID' or key == 'ENTRYTYPE':
-                        pass
-                    else:
-                        setattr(r, key, LatexNodes2Text().latex_to_text(value))
-                r.save()
+                for entry in bibtex_database.entries:
+                    r = Record()
+                    r.entry_type = entry['ENTRYTYPE']
+                    r.cite_key = entry['ID']
+                    r.project = project
+                    fields = entry.items()
+                    for key, value in fields:
+                        if key == 'ID' or key == 'ENTRYTYPE':
+                            pass
+                        else:
+                            setattr(r, key, LatexNodes2Text().latex_to_text(value))
+                    r.save()
 
-            os.remove(os.path.join(settings.MEDIA_ROOT, filename))
-            return redirect('projects:single', slug=slug)
-        else:
-            pass
-            # wrong file format
+                os.remove(os.path.join(settings.MEDIA_ROOT, filename))
+                return redirect('projects:single', slug=slug)
+            else:
+                pass
+                # wrong file format
 
-    return render(request, 'projects/project_import_file.html', context)
-
+        return render(request, 'projects/project_import_file.html', context)
+    else:
+        return HttpResponse("You don't have the permission to do this")
 
 @login_required
 def project_export_file(request, slug):
+    """
+    Letting all projectmembers be able to download file
+    """
     project = get_object_or_404(Project, slug=slug)
     records = project.records.all()
 
@@ -196,17 +249,42 @@ def list_projects(request):
 @login_required
 def delete_invite(request, slug, pk):
     """
-    Only admin
+    Only admin can access this view
     """
-    try:
-        invite = get_object_or_404(Invitation, pk=pk)
-    except ObjectDoesNotExist:
-        messages.warning(self.request, 'Warning: The invite could not be found and therefor not withdrawn')
+    if ProjectMember.objects.get(user=request.user, project=Project.objects.get(slug=slug)).is_owner:
+
+        try:
+            invite = get_object_or_404(Invitation, pk=pk)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, 'Warning: The invite could not be found and therefor not withdrawn')
+        else:
+            invite.delete()
+        return redirect('projects:settings', slug=slug)
     else:
-        invite.delete()
-    return redirect('projects:settings', slug=slug)
+        return HttpResponse("You don't have the permission to do this")
+
+@login_required
+def delete_member(request, slug, pk):
+    """
+    Only admin can delete members!
+    """
+    if ProjectMember.objects.get(user=request.user, project=Project.objects.get(slug=slug)).is_owner:
+        try:
+            projectmember = get_object_or_404(ProjectMember, pk=pk)
+        except ObjectDoesNotExist:
+            messages.warning(self.request, 'Warning: The member could not be found and therefor not removed')
+        else:
+            projectmember.delete()
+        return redirect('projects:settings', slug=slug)
+    else:
+        return HttpResponse("You don't have the permission to do this")
+
 
 class LeaveProject(LoginRequiredMixin, generic.RedirectView):
+    """
+    All projectmembers can leave a project, should probably do a check to see
+    that its not the only admin.
+    """
     def get_redirect_url(self, *args,**kwargs):
         return reverse('projects:all')
 
@@ -222,6 +300,9 @@ class LeaveProject(LoginRequiredMixin, generic.RedirectView):
         return super().get(request, *args,**kwargs)
 
 class DeclineInvite(LoginRequiredMixin, generic.RedirectView):
+    """
+    Every user can access this view
+    """
     def get_redirect_url(self, *args,**kwargs):
         return reverse('projects:all')
 
@@ -236,6 +317,9 @@ class DeclineInvite(LoginRequiredMixin, generic.RedirectView):
         return super().get(request, *args,**kwargs)
 
 class JoinProject(LoginRequiredMixin, generic.RedirectView):
+    """
+    Every user can access this view
+    """
     def get_redirect_url(self, *args,**kwargs):
         return reverse('projects:all')
 
@@ -258,7 +342,7 @@ class JoinProject(LoginRequiredMixin, generic.RedirectView):
 
 class DeleteProject(LoginRequiredMixin, generic.DeleteView):
     """
-    Only admin 
+    Only admin should be able to! How to ensure in this CBV? recreate a FBV?
     """
     model = Project
 

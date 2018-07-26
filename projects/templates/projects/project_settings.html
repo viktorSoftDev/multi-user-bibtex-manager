@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="col s12">
-    <div class="card grey lighten-5">
+    <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col s12">
@@ -20,10 +20,12 @@
                   <h2 class="center">{{ project.project_title }}</h2>
                   <h6 class="center">{{ project.description }}</h6><br>
                   <div class="right-align">
+                    {% if userperm.is_owner %}
                     <a class="btn waves-effect btn-medium waves-light indigo" href="{% url 'projects:edit' slug=project.slug %}">
                       <i class="material-icons left">edit</i>
                       Edit Description
                     </a>
+                    {% endif %}
                   </div>
 
                   <hr>
@@ -40,18 +42,28 @@
                         <img src="{% static 'images/usericon.svg' %}" alt="avatar" class="circle"></img>
                         <span class="title">{{ member.user.first_name }} {{ member.user.last_name }}</span>
                         <p>{{ member.user.email }}<br>
-                        {% if member.is_owner %}
-                          Admin
-                        {% elif member.is_editor %}
-                          Read&write
-                        {% elif member.is_reader %}
-                          ReadOnly
+                        {% if userperm.is_owner %}
+                          {% if member.is_owner %}
+                            Admin
+                          {% elif member.is_editor %}
+                            Read&write
+                          {% elif member.is_reader %}
+                            ReadOnly
+                          {% endif %}
                         {% endif %}
                         </p>
-                        <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a>
+                        {% if userperm.is_owner %}
+                        <span class="secondary-content">
+                          <a href="{% url 'projects:editperm' slug=project.slug pk=member.user.pk %}" ><i class="material-icons">edit</i></a>
+                          {% if memberships.count > 1 %}
+                          <a href="{% url 'projects:delete-member' slug=project.slug pk=member.pk %}"><i class="material-icons">delete</i></a>
+                          {% endif %}
+                        </span>
+                          {% endif %}
                       </li>
                     {% endfor %}
                   </ul>
+                {% if userperm.is_owner %}
                   {% if invites %}
                   <ul class="collection with-header">
 
@@ -77,7 +89,7 @@
                         <i class="material-icons left">person_add</i> Invite User to Collaborate</a>
 
                   </div>
-
+                  {% endif %}
 
 
           </div>
@@ -88,11 +100,12 @@
               <i class="material-icons left">block</i>
               Leave Project
             </a>
-
+            {% if userperm.is_owner %}
             <a class="btn waves-effect waves-light red darken-3" href="#delete_project{{ project.pk }}">
               <i class="material-icons left">delete</i>
               Delete Project
             </a>
+            {% endif %}
           </div>
         </div>
       </div>

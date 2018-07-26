@@ -23,7 +23,7 @@
 
 <div class="row">
   <div class="col s12">
-    <div class="card grey lighten-5">
+    <div class="card">
       <div class="card-content">
         <div class="row">
           <div class="col s12">
@@ -32,101 +32,44 @@
               info_outline
             </i></h2>
 
-        <h6 class="center">Choose what fields to show</h6>
+        <h6 class="center"></h6>
       </div> <!-- close col s12 -->
     </div> <!-- close row -->
         <div class="row">
           <div class="col s4">
 
           </div>
-              <form action="#">
-                    <div class="col s12">
-
-
-                      <div class="row">
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>Cite Key</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>Entry Type</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" value="title"/>
-                            <span>Title</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>Author</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>Journal</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn"  />
-                            <span>Editor</span>
-                          </label>
-                        </div>
-
-                      </div>
-                      <div class="row">
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" />
-                            <span>Publisher</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>Year</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" />
-                            <span>Month</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" />
-                            <span>School</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" />
-                            <span>Institution</span>
-                          </label>
-                        </div>
-                        <div class="col s2">
-                          <label>
-                            <input type="checkbox" class="filled-in toggleColumn" checked="checked" />
-                            <span>_Actions_</span>
-                          </label>
-                        </div>
-
-
-
-                    </div>
-              </form>
-
-
-
+          <div class="input-field col s12">
+            <select id="colselect" multiple label="Fields">
+              <option class="toggleColumn" value="11" selected>Address</option>
+              <option class="toggleColumn" value="12">Annote</option>
+              <option class="toggleColumn" value="3" selected>Author</option>
+              <option class="toggleColumn" value="13">Booktitle</option>
+              <option class="toggleColumn" value="14">Chapter</option>
+              <option class="toggleColumn" value="0" disabled selected>Cite Key</option>
+              <option class="toggleColumn" value="15">Crossref</option>
+              <option class="toggleColumn" value="16">Edition</option>
+              <option class="toggleColumn" value="5">Editor</option>
+              <option class="toggleColumn" value="1" selected>Entry Type</option>
+              <option class="toggleColumn" value="17">Howpublished</option>
+              <option class="toggleColumn" value="10">Institution</option>
+              <option class="toggleColumn" value="4" selected>Journal</option>
+              <option class="toggleColumn" value="18">Key</option>
+              <option class="toggleColumn" value="8">Month</option>
+              <option class="toggleColumn" value="19">Number</option>
+              <option class="toggleColumn" value="20">Organization</option>
+              <option class="toggleColumn" value="21">Pages</option>
+              <option class="toggleColumn" value="6">Publisher</option>
+              <option class="toggleColumn" value="9">School</option>
+              <option class="toggleColumn" value="22">Series</option>
+              <option class="toggleColumn" value="2" selected>Title</option>
+              <option class="toggleColumn" value="23">Type</option>
+              <option class="toggleColumn" value="24">Volume</option>
+              <option class="toggleColumn" value="7" selected>Year</option>
+              <option class="toggleColumn" value="25" selected>_Actions_</option>
+            </select>
+            <label>Choose what fields to show</label>
+          </div>
 
               <table class="mdl-data-table " style="width:100%" id="example">
                 <!-- TABLE HEAD -->
@@ -143,6 +86,20 @@
                     <th>Month</th>
                     <th>School</th>
                     <th>Institution</th>
+                    <th>Address</th>
+                    <th>Annote</th>
+                    <th>Booktitle</th>
+                    <th>Chapter</th>
+                    <th>Crossref</th>
+                    <th>Edition</th>
+                    <th>Howpublished</th>
+                    <th>Key</th>
+                    <th>Number</th>
+                    <th>Organization</th>
+                    <th>Pages</th>
+                    <th>Series</th>
+                    <th>Type</th>
+                    <th>Volume</th>
                     <th><span class="right">_Actions_</span></th>
                   </tr>
                 </thead>
@@ -210,9 +167,67 @@
                         {% if record.school %}{{ record.school }}{% else %}-{% endif %}
                       </td>
                       <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
-                        {% if record.institution %}{{ record.institution }}{% else %}-{% endif %}
+                        {% if record.institution %}
+                          {{ record.institution|truncatechars:30 }}
+                          <!-- This is only to be able to filter on the whole title -->
+                          <span hidden>{{ record.institution }}</span>
+                        {% else %}
+                           -
+                        {% endif %}
                       </td>
-
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.address %}
+                          {{ record.address|truncatechars:30 }}
+                          <!-- This is only to be able to filter on the whole title -->
+                          <span hidden>{{ record.address }}</span>
+                        {% else %}
+                           -
+                        {% endif %}                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.annote %}{{ record.annote }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.booktitle %}
+                          {{ record.booktitle|truncatechars:30 }}
+                          <!-- This is only to be able to filter on the whole title -->
+                          <span hidden>{{ record.booktitle }}</span>
+                        {% else %}
+                           -
+                        {% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.chapter %}{{ record.chapter }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.crossref %}{{ record.crossref }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.edition %}{{ record.edition }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.howpublished %}{{ record.howpublished }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.key %}{{ record.key }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.number %}{{ record.number }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.organization %}{{ record.organization }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.pages %}{{ record.pages }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.series %}{{ record.series }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.type %}{{ record.type }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.volume %}{{ record.volume }}{% else %}-{% endif %}
+                      </td>
 
                       <td class="right">
                         <a  href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}" class="grey-text tooltipped"
@@ -320,7 +335,8 @@
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.material.min.js"></script>
 <script>
 
-document.addEventListener('change', function() {
+var allCol = document.querySelector('#colselect');
+allCol.addEventListener('change', function() {
   var col = document.querySelectorAll('.toggleColumn');
   renderTable(col)
  });
@@ -329,11 +345,13 @@ function renderTable(col){
   columnList = []
   for (var i = 0; i < col.length; i++) {
     columnList[i] = {
-      "targets": [i],
-      "visible": col[i].checked,
+      "targets": [parseInt(col[i].value)],
+      "visible": col[i].selected,
       className: 'mdl-data-table__cell--non-numeric',
     }
+
   }
+
   // Initializing datatables. must be reinitialized every time there is a change
   // due to how the plugin is configured. therefore destroy = true.
   $('#example').DataTable({
@@ -351,7 +369,7 @@ function renderTable(col){
     },
     "columnDefs": columnList
   });
-}
+};
 
 jQuery(document).ready(function($) {
     $('.modal').modal();

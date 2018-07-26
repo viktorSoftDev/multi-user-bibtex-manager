@@ -2,9 +2,9 @@
 {% load material_form %}
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
-<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ projectmember.project.project_title }}</a>
 <a href="{% url 'projects:settings' slug=project.slug %}" class="breadcrumb">Settings</a>
-<a href="{% url 'projects:invite' slug=project.slug %}" class="breadcrumb">Invite</a>
+<a href="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" class="breadcrumb">edit permission</a>
 {% endblock %}
 
 {% block project_content %}
@@ -19,15 +19,15 @@
         <div class="row">
           <div class="col s12">
 
-                  <h4 class="center"> Invite collegues to collaborate with</h4>
-                  <h3 class="center">{{ project.project_title }}</h3>
+                  <h4 class="center"> Change permission</h4>
+                  <h3 class="center">{{ projectmember.user.first_name }} {{ projectmember.user.last_name }}</h3>
                   <div class="row">
                     <div class="col s6 offset-s3">
-                      <form class="" action="{% url 'projects:invite' slug=project.slug %}" method="POST">
+                      <form class="" action="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" method="POST">
                         {% csrf_token %}
                         {% form form=form %} {% endform %}
                         <div class="center-align">
-                          <button type="submit" name="_submit" class="btn indigo btn-large waves-light waves-effect">Send Invite</button>
+                          <button type="submit" name="_submit" class="btn indigo waves-light waves-effect">save changes</button>
                         </div>
                       </form>
                     </div>
@@ -42,4 +42,6 @@
     </div>
   </div>
 </div>
+
+
 {% endblock %}
