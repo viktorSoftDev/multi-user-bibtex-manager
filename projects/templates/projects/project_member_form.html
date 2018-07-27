@@ -4,7 +4,7 @@
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ projectmember.project.project_title }}</a>
 <a href="{% url 'projects:settings' slug=project.slug %}" class="breadcrumb">Settings</a>
-<a href="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" class="breadcrumb">edit permission</a>
+<a href="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" class="breadcrumb">Edit Permission</a>
 {% endblock %}
 
 {% block project_content %}
@@ -19,19 +19,38 @@
         <div class="row">
           <div class="col s12">
 
-                  <h4 class="center"> Change permission</h4>
+
                   <h3 class="center">{{ projectmember.user.first_name }} {{ projectmember.user.last_name }}</h3>
                   <div class="row">
                     <div class="col s6 offset-s3">
-                      <form class="" action="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" method="POST">
-                        {% csrf_token %}
-                        {% form form=form %} {% endform %}
-                        <div class="center-align">
-                          <button type="submit" name="_submit" class="btn indigo waves-light waves-effect">save changes</button>
-                        </div>
-                      </form>
+                      {% if user == projectmember.user %}
+                        {% if admins > 1 %}
+                        <form class="" action="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" method="POST">
+                          {% csrf_token %}
+                          {% form form=form %} {% endform %}
+                          <div class="center-align">
+                            <button type="submit" name="_submit" class="btn indigo waves-light waves-effect">save changes</button>
+                          </div>
+                        </form>
+                        {% else %}
+                          To change your own permission first make sure to promote another project admin
+                        {% endif %}
+                        {% else %}
+                        <form class="" action="{% url 'projects:editperm' slug=project.slug pk=projectmember.user.pk %}" method="POST">
+                          {% csrf_token %}
+                          {% form form=form %} {% endform %}
+                          <div class="center-align">
+                            <button type="submit" name="_submit" class="btn indigo waves-light waves-effect">save changes</button>
+                          </div>
+                        </form>
+                      {% endif %}
                     </div>
                   </div>
+                  {% if user != projectmember.user %}
+                  <a class="btn waves-effect red darken-3 waves-light right" href="{% url 'projects:delete-member' slug=project.slug pk=projectmember.user.pk %}"><i class="material-icons left">delete</i>Remove member</a>
+                  {% endif %}
+                  <a class="waves-effect btn-flat waves-grey blue-grey-text waves-light left" href="{% url 'projects:settings' slug=project.slug %}">Back</a>
+
 
           </div>
         </div>

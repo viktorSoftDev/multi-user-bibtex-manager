@@ -8,12 +8,15 @@
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
-<a href="" class="breadcrumb">
-  <a  href="{% url 'projects:records:create' slug=project.slug %}"
-      class="btn btn-small waves-light waves-effect cyan darken-3">
-      Add entry
+{% if userperm.is_reader %}
+{% else %}
+  <a href="" class="breadcrumb">
+    <a  href="{% url 'projects:records:create' slug=project.slug %}"
+        class="btn btn-small waves-light waves-effect cyan darken-3">
+        Add entry
+    </a>
   </a>
-</a>
+{% endif %}
 {% endblock %}
 
 
@@ -36,8 +39,26 @@
       </div> <!-- close col s12 -->
     </div> <!-- close row -->
         <div class="row">
-          <div class="col s4">
+          <div class="col s12">
+            {% if duplicates %}
+              <h3>There are duplicates in your project!</h3>
+              <ul class="collection">
+                {% for record in duplicates  %}
+                  <a class="collection-item" href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}">
+                    KEY: {{ record.cite_key }},
+                    {% if record.title %}
+                      TITLE: {{ record.title|truncatechars:80 }}
+                    {% endif %}
+                  <div class="secondary-content">
+                    <i class="material-icons right">edit</i>
 
+                  </div>
+                </a>
+                {% endfor %}
+
+              </ul>
+
+            {% endif %}
           </div>
           <div class="input-field col s12">
             <select id="colselect" multiple label="Fields">
@@ -66,7 +87,10 @@
               <option class="toggleColumn" value="23">Type</option>
               <option class="toggleColumn" value="24">Volume</option>
               <option class="toggleColumn" value="7" selected>Year</option>
+              {% if userperm.is_reader %}
+              {% else %}
               <option class="toggleColumn" value="25" selected>_Actions_</option>
+              {% endif %}
             </select>
             <label>Choose what fields to show</label>
           </div>
@@ -100,7 +124,10 @@
                     <th>Series</th>
                     <th>Type</th>
                     <th>Volume</th>
+                    {% if userperm.is_reader %}
+                    {% else %}
                     <th><span class="right">_Actions_</span></th>
+                    {% endif %}
                   </tr>
                 </thead>
                 <!-- END TABLE HEAD -->
@@ -228,8 +255,11 @@
                       <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.volume %}{{ record.volume }}{% else %}-{% endif %}
                       </td>
-
+                      {% if userperm.is_reader %}
+                      {% else %}
                       <td class="right">
+
+
                         <a  href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}" class="grey-text tooltipped"
                             data-position="top"
                             data-tooltip="Edit">
@@ -245,7 +275,9 @@
                             data-tooltip="Delete">
                           <i class="material-icons">delete</i>
                         </a>
+
                       </td>
+                      {% endif %}
                     </tr>
 
                     <!-- Modal for each record needs to be inside for loop -->
@@ -282,6 +314,28 @@
               <i class="large material-icons">mode_edit</i>
             </a>
             <ul>
+              {% if userperm.is_reader %}
+              <li>
+                <a  class="btn-floating green tooltipped"
+                    data-position="left"
+                    data-tooltip="Export Project"
+                    href="{% url 'projects:export' slug=project.slug %}">
+                    <i class="material-icons">
+                      file_download
+                    </i>
+                </a>
+              </li>
+              <li>
+                <a  class="btn-floating red tooltipped"
+                    data-position="left"
+                    data-tooltip="Project Info"
+                    href="{% url 'projects:settings' slug=project.slug %}">
+                    <i class="material-icons">
+                      edit
+                    </i>
+                  </a>
+                </li>
+              {% else %}
               <li>
                 <a  class="btn-floating cyan darken-1 tooltipped"
                     data-position="left"
@@ -322,6 +376,7 @@
                     </i>
                   </a>
                 </li>
+              {% endif %}
             </ul>
           </div> <!-- CLOSE fixed-action-btn click-to-toggle -->
         </div> <!-- CLOSE col s12 -->

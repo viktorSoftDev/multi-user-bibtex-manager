@@ -2,6 +2,7 @@
 from django import forms
 from . import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.utils.text import slugify
 
 
 from django.contrib.auth import get_user_model
@@ -11,7 +12,18 @@ class CreateProjectForm(forms.ModelForm):
     class Meta:
         model = models.Project
         fields = ['project_title', 'description']
+    def clean(self):
+        cleaned_data = super(CreateProjectForm, self).clean()
+        title = cleaned_data.get('project_title')
+        try:
+            slug = slugify(title)
+            models.Project.objects.get(slug=slug)
+            raise forms.ValidationError("Sorry, that projecttitle is already in use")
+        except ObjectDoesNotExist:
+            pass
 
+class ImportFileForm(forms.Form):
+    file = forms.FileInput()
 
 class ProjectMemberForm(forms.Form):
     PERM_CHOICES = (

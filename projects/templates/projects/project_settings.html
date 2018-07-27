@@ -42,7 +42,7 @@
                         <img src="{% static 'images/usericon.svg' %}" alt="avatar" class="circle"></img>
                         <span class="title">{{ member.user.first_name }} {{ member.user.last_name }}</span>
                         <p>{{ member.user.email }}<br>
-                        {% if userperm.is_owner %}
+                        {% if userperm.is_owner or member.user == user %}
                           {% if member.is_owner %}
                             Admin
                           {% elif member.is_editor %}
@@ -51,12 +51,14 @@
                             ReadOnly
                           {% endif %}
                         {% endif %}
+
                         </p>
                         {% if userperm.is_owner %}
                         <span class="secondary-content">
                           <a href="{% url 'projects:editperm' slug=project.slug pk=member.user.pk %}" ><i class="material-icons">edit</i></a>
-                          {% if memberships.count > 1 %}
-                          <a href="{% url 'projects:delete-member' slug=project.slug pk=member.pk %}"><i class="material-icons">delete</i></a>
+                          {% if user != member.user %}
+
+                            <a href="{% url 'projects:delete-member' slug=project.slug pk=member.pk %}"><i class="material-icons">delete</i></a>
                           {% endif %}
                         </span>
                           {% endif %}
@@ -96,10 +98,12 @@
         </div>
         <div class="card-action">
           <div class="right-align">
+            {% if memberships.count > 1 %}
             <a class="btn waves-effect waves-light orange" href="#leave_project{{ project.pk }}">
               <i class="material-icons left">block</i>
               Leave Project
             </a>
+            {% endif %}
             {% if userperm.is_owner %}
             <a class="btn waves-effect waves-light red darken-3" href="#delete_project{{ project.pk }}">
               <i class="material-icons left">delete</i>
@@ -138,18 +142,20 @@
      <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
      <p class="center-align">Deleting the project will also delete any records
      within the project. <br>This will delete the project for
-     everyone that is a projectmember. <br>To Delete
-     the project locally; use the 'Leave' option.<br>
+     everyone that is a projectmember. <br> {% if memberships.count > 1 %}To Delete
+     the project locally; use the 'Leave' option.<br>{% endif %}
      Deleting this project can not be reversed.</p>
    </div>
    <div class="modal-footer">
-     <div class="modal-action right-align">
+    <div class="modal-action right-align">
 
-       <a href="" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
-     <a href="{% url 'projects:leave' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
-       <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
+      <a href="" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
+      {% if memberships.count > 1 %}
+        <a href="{% url 'projects:leave' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
+      {% endif %}
+      <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>
 
-     </div>
+    </div>
    </div>
  </div>
 

@@ -4,13 +4,11 @@ from django.contrib import admin
 
 from . import models
 
-class ProjectMemberInline(admin.TabularInline):
-    model = models.ProjectMember
+class ProjectMember(admin.ModelAdmin):
+    fields = ['user', 'project']
 
-class ProjectAdmin(admin.ModelAdmin):
-    inlines = [
-        ProjectMemberInline,
-    ]
+    list_display = ['user', 'project']
+
 
 admin.site.register(models.Project)
 admin.site.register(models.ProjectMember)

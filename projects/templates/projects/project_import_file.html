@@ -16,13 +16,16 @@
           <span class="card-title center"><h2>Import File to {{ project.project_title }}</h2></span>
             <form enctype="multipart/form-data" class="" action="{% url 'projects:import' slug=project.slug %}" method="POST">
               {% csrf_token %}
+              {% if error %}
+                <p class="red-text darken-1">{{ error }}</p>
+              {% endif %}
               <div class="file-field input-field">
                 <div class="btn indigo waves-effect waves-light">
                   <span>File</span>
-                  <input type="file" name="import_file">
+                  <input type="file" name="import_file" required>
                 </div>
                 <div class="file-path-wrapper">
-                  <input class="file-path validate" type="text">
+                  <input class="file-path validate" type="text" required>
                 </div>
               </div>
 
