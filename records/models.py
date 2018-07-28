@@ -61,6 +61,7 @@ class Record(models.Model):
 
     institution =   models.CharField(max_length=256, blank=True, default='')
 
+    url =           models.URLField(blank=True, default='')
     #############################################
 
 
@@ -90,7 +91,7 @@ class Record(models.Model):
     def get_absolute_url(self):
         return reverse('projects:records:single',kwargs={'slug':self.project.slug, 'pk':self.pk})
 
-    
+
 
 
 

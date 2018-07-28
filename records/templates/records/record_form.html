@@ -35,31 +35,6 @@
 
     <script>
 
-    // var form = [
-    //     {
-    //       name:"entry_type",
-    //       label:"Entry Type",
-    //       value:""
-    //     },
-    //     {
-    //       name:"cite_key",
-    //       label:"Cite Key",
-    //       value:""
-    //     }
-    // ]
-    //
-    // function renderForm(form) {
-    //   var htmlString ="";
-    //     for (var field in form) {
-    //       alert(form[field].name);
-    //       htmlString += '<input id="id_'+form[field].name+'" type="text" name="'+form[field].name+'" value="">'
-    //       htmlString += '<label for="id_'+form[field].name+'">'+form[field].label+'</label>'
-    //
-    //     }
-    //     document.querySelector('.test').innerHTML = htmlString;
-    // }
-    //
-    // renderForm(form);
 
 
     // MIGHT work
@@ -125,7 +100,7 @@
     }
 
     function get_form(){
-      let v = $('#id_entry_type').val().toString()
+      let v = $('#id_entry_type').val().toString();
       let url_string = form_urls[v];
       if (v < "------------") {
         console.log(v);
@@ -140,23 +115,33 @@
             data: formData
         }).done(function (data) {
           document.getElementById('form2div').innerHTML = data;
-
         });
-        // $.get({'url': url_string}).done( function(data) {
-        //         document.getElementById('form2div').innerHTML = data;
-        // });
 
         $('#submit_button').show();
+        let v = $('#id_entry_type').val().toString();
+        if (v === "book") {
+          let a = document.querySelector("#id_author");
+          console.log(a);
+        } else if (v === "inbook") {
 
+        }
       }
     };
 
+
+    function validate_form() {
+      var formData = $('#record_form').serialize()
+      console.log(formData);
+    };
 
       $(document).ready(function(){
         $('#id_entry_type').change(function(){
           get_form();
 
         });
+        $('#submit_button').click(function(){
+          validate_form();
+        })
 
 
 

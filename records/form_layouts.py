@@ -1,42 +1,48 @@
-from material import Layout, Row, Fieldset
+from material import *
 
 
 ARTICLE_LAYOUT = Layout(Fieldset("Required Fields [article]",
                 'title',
                 'author',
                 'journal',
-                'year'),
+                'year',
+                'volume'),
                 Fieldset("Optional Fields [article]",
-                'volume',
                 'number',
                 'pages',
                 'month',
-                'note')
+                'note',
+                "key")
                 )
+
 BOOK_LAYOUT = Layout(Fieldset("Required Fields [book]",
                 "title",
-                "author",
-                "editor",
                 "publisher",
-                "year",
+                "year"),
+                Fieldset("Provide Author AND/OR Editor",
+                Row("author",
+                "editor")),
                 Fieldset("Optional Fields [book]",
-                "volume",
-                "number",
+                Row("volume", "number"),
                 "address",
                 "edition",
-                "month")
-                ))
+                "month",
+                "note",
+                "key",
+                "url")
+                )
 
 BOOKLET_LAYOUT = Layout(Fieldset("Required Fields [booklet]",
-                "title",
+                "title"),
                 Fieldset("Optional Fields [booklet]",
                 "author",
                 "howpublished",
                 "address",
                 "month",
                 "year",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 CONFERENCE_LAYOUT = Layout(Fieldset("Required Fields [conference]",
                 "title",
@@ -45,25 +51,24 @@ CONFERENCE_LAYOUT = Layout(Fieldset("Required Fields [conference]",
                 "year",
                 Fieldset("Optional Fields [conference]",
                 "editor",
-                "volume",
-                "number",
+                Row("volume",
+                "number"),
                 "series",
                 "pages",
                 "address",
                 "month",
                 "organization",
                 "publisher",
-                "note")
+                "note",
+                "key")
                 ))
 
 INBOOK_LAYOUT = Layout(Fieldset("Required Fields [inbook]",
-                "author",
-                "editor",
                 "title",
-                "chapter",
-                "pages",
                 "publisher",
-                "year",
+                "year"),
+                Fieldset("Provide Author AND/OR Editor and Chapter AND/OR Pages",
+                Row("author", "editor"),Row("chapter", "pages")),
                 Fieldset("Optional Fields [inbook]",
                 "volume",
                 "number",
@@ -72,19 +77,19 @@ INBOOK_LAYOUT = Layout(Fieldset("Required Fields [inbook]",
                 "address",
                 "edition",
                 "month",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 INCOLLECTIONS_LAYOUT = Layout(Fieldset("Required Fields [incollections]",
                     "title",
                     "author",
                     "booktitle",
                     "publisher",
-                    "year",
-                    Fieldset("Optional Fields",
+                    "year"),
+                    Fieldset("Optional Fields [incollections]",
                     "editor",
-                    "volume",
-                    "number",
+                    Row("volume", "number"),
                     "series",
                     "type",
                     "chapter",
@@ -92,29 +97,30 @@ INCOLLECTIONS_LAYOUT = Layout(Fieldset("Required Fields [incollections]",
                     "address",
                     "edition",
                     "month",
-                    "note")
-                    ))
+                    "note",
+                    "key")
+                    )
 
 INPROCEEDINGS_LAYOUT = Layout(Fieldset("Required Fields [inproceedings]",
                 "title",
                 "author",
                 "booktitle",
-                "year",
+                "year"),
                 Fieldset("Optional Fields [inproceedings]",
                 "editor",
-                "volume",
-                "number",
+                Row("volume", "number"),
                 "series",
                 "pages",
                 "address",
                 "month",
                 "organization",
                 "publisher",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 MANUAL_LAYOUT = Layout(Fieldset("Required Fields [manual]",
-                "title",
+                "title"),
                 Fieldset("Optional Fields [manual]",
                 "author",
                 "organization",
@@ -122,20 +128,22 @@ MANUAL_LAYOUT = Layout(Fieldset("Required Fields [manual]",
                 "edition",
                 "month",
                 "year",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 MASTERSTHESIS_LAYOUT = Layout(Fieldset("Required Fields [mastersthesis]",
                 "title",
                 "author",
                 "school",
-                "year",
+                "year"),
                 Fieldset("Optional Fields [mastersthesis]",
                 "type",
                 "address",
                 "month",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 MISC_LAYOUT = Layout(Fieldset("Optional Fields [misc]",
                 "title",
@@ -143,48 +151,51 @@ MISC_LAYOUT = Layout(Fieldset("Optional Fields [misc]",
                 "howpublished",
                 "month",
                 "year",
-                "note")
+                "note",
+                "key")
                 )
 
 PHDTHESIS_LAYOUT = Layout(Fieldset("Required Fields [phdthesis]",
                 "title",
                 "author",
                 "school",
-                "year",
+                "year"),
                 Fieldset("Optional Fields [phdthesis]",
                 "type",
                 "address",
                 "month",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 PROCEEDINGS_LAYOUT = Layout(Fieldset("Required Fields [proceedings]",
                 "title",
-                "year",
+                "year"),
                 Fieldset("Optional Fields [proceedings]",
                 "editor",
-                "volume",
-                "number",
+                Row("volume", "number"),
                 "series",
                 "address",
-                "publisher",
-                "note",
                 "month",
-                "organization")
-                ))
+                "publisher",
+                "organization",
+                "note",
+                "key")
+                )
 
 TECHREPORT_LAYOUT = Layout(Fieldset("Required Fields [techreport]",
                 "title",
                 "author",
                 "institution",
-                "year",
+                "year"),
                 Fieldset("Optional Fields [techreport]",
                 "type",
                 "number",
                 "address",
                 "month",
-                "note")
-                ))
+                "note",
+                "key")
+                )
 
 UNPUBLISHED_LAYOUT = Layout(Fieldset("Required Fields [unpublished]",
                 "title",
@@ -192,7 +203,8 @@ UNPUBLISHED_LAYOUT = Layout(Fieldset("Required Fields [unpublished]",
                 "note",
                 Fieldset("Optional Fields [unpublished]",
                 "month",
-                "year")
+                "year",
+                "key")
                 ))
 
 

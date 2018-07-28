@@ -32,13 +32,14 @@ FIELDS = [
     "type",         #21
     "volume",       #22
     "year",         #23
+    "url"
 
 ]
 
 """
 Here follows the specific fields that are required and optional
 for each specific entry which can all be accessed through
-ENTRY_TYPES("entry_type")[x] where x = 0 gives a list of
+ENTRY_TYPE_FIELDS["entry_type"][x] where x = 0 gives a list of
 required fields and x = 1 gives the optional fields
 """
 ARTICLE_FIELDS = [
@@ -47,31 +48,34 @@ ARTICLE_FIELDS = [
         "author",
         "journal",
         "year",
+        "volume",
     ],
     [
-        "volume",
         "number",
         "pages",
         "month",
         "note",
+        "key"
     ]
 ]
 
 BOOK_FIELDS = [
     [
         "title",
-        "author",
-        "editor",
         "publisher",
         "year",
     ],
     [
+        "author",
+        "editor",
         "volume",
         "number",
         "address",
         "edition",
         "month",
-        "month",
+        "note",
+        "key",
+        "url"
     ]
 ]
 
@@ -85,7 +89,8 @@ BOOKLET_FIELDS = [
         "address",
         "month",
         "year",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -106,20 +111,21 @@ CONFERENCE_FIELDS = [
         "month",
         "organization",
         "publisher",
-        "note"
+        "note",
+        "key"
     ]
 ]
 INBOOK_FIELDS =  [
     [
-        "author",
-        "editor",
         "title",
-        "chapter",
-        "pages",
         "publisher",
         "year",
     ],
     [
+        "author",
+        "editor",
+        "chapter",
+        "pages",
         "volume",
         "number",
         "series",
@@ -127,7 +133,8 @@ INBOOK_FIELDS =  [
         "address",
         "edition",
         "month",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -150,7 +157,8 @@ INCOLLECTIONS_FIELDS = [
         "address",
         "edition",
         "month",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -171,7 +179,8 @@ INPROCEEDINGS_FIELDS = [
         "month",
         "organization",
         "publisher",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -186,7 +195,8 @@ MANUAL_FIELDS =[
         "edition",
         "month",
         "year",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -201,7 +211,8 @@ MASTERSTHESIS_FIELDS = [
         "type",
         "address",
         "month",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -215,7 +226,8 @@ MISC_FIELDS = [
         "howpublished",
         "month",
         "year",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -230,7 +242,8 @@ PHDTHESIS_FIELDS = [
         "type",
         "address",
         "month",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -248,7 +261,8 @@ PROCEEDINGS_FIELDS = [
         "publisher",
         "note",
         "month",
-        "organization"
+        "organization",
+        "key"
     ]
 ]
 
@@ -264,7 +278,8 @@ TECHREPORT_FIELDS = [
         "number",
         "address",
         "month",
-        "note"
+        "note",
+        "key"
     ]
 ]
 
@@ -276,7 +291,8 @@ UNPUBLISHED_FIELDS = [
     ],
     [
         "month",
-        "year"
+        "year",
+        "key"
     ]
 ]
 

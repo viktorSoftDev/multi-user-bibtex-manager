@@ -41,6 +41,7 @@ class ShowRecordForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         entry = kwargs.pop('entry')
         super().__init__(*args,**kwargs)
+
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
             self.fields[fieldname] = forms.CharField()
             self.fields[fieldname].required = True
