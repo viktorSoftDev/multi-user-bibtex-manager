@@ -41,13 +41,17 @@ class ShowRecordForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         entry = kwargs.pop('entry')
         super().__init__(*args,**kwargs)
+        self.fields['entry_type'].widget.attrs['readonly'] = True
+        self.fields['cite_key'].widget.attrs['readonly'] = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
             self.fields[fieldname] = forms.CharField()
             self.fields[fieldname].required = True
+            self.fields[fieldname].widget.attrs['readonly'] = True
 
         for fieldname in ENTRY_TYPE_FIELDS[entry][1]:
             self.fields[fieldname] = forms.CharField()
             self.fields[fieldname].required = False
+            self.fields[fieldname].widget.attrs['readonly'] = True
 
         self.layout = FORM_LAYOUT[entry]

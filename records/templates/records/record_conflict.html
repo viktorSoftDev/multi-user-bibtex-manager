@@ -1,0 +1,113 @@
+
+
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="row">
+  <div class="col s12">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title center-align"><h4 class="">Record Conflict</h4>
+          <p>Someone edited the record at the same time you did!<br> Please choose
+          which record to keep or select both to keep both</p>
+
+        <h6>Part of: <span class="chip">{{ project.project_title.capitalize }}</span></h6>
+        </span>
+
+
+            <div class="center-align">
+              <button id="both" class="btn waves-effect waves-light indigo" type="submit" name="button">Keep Both Records</button>
+            </div>
+            <hr>
+
+        <div class="row">
+          <div class="col s6">
+
+
+        <div class="section">
+          <div class="card grey lighten-2">
+            <div class="card-content">
+              <h5 class="center-align">Record in database</h5>
+              <form class="" action="{% url 'projects:records:conflict' slug=project.slug pk=old_record.pk %}" method="POST">
+              <div class="center-align">
+                <button class="btn waves-effect waves-light indigo" href="">Keep Record</button>
+
+              </div>
+              <input hidden type="text" name="keep" value="OLD">
+              <hr>
+              <div class="row">
+                <div class="col s6">
+                  <label for="e-type">Entry Type</label>
+                  <span id="e-type">{{ data.entry_type  }}</span>
+
+                </div>
+                <div class="col s6">
+                  <label for="c-key">Cite Key</label>
+                  <span id="c-key">{{ data.cite_key }}</span>
+                </div>
+              </div>
+
+
+                {% csrf_token %}
+                {% form form=data %}{% endform %}
+
+              </form>
+            </div>
+          </div>
+
+      </div>
+
+
+      </div>
+      <div class="col s6">
+
+
+
+        <div class="section">
+          <div class="card grey lighten-5">
+            <div class="card-content">
+          <h5 class="center-align">Current record</h5>
+
+          <form id="current_form" class="" action="{% url 'projects:records:conflict' slug=project.slug pk=old_record.pk %}" method="POST">
+            {% csrf_token %}
+            <div class="center-align">
+              <button class="btn waves-effect waves-light indigo" type="submit" name="button">Keep Record</button>
+            </div>
+            <hr>
+            {% form form=form1 %}{% endform %}
+            {% form form=form %}{% endform %}
+            <input hidden type="text" name="keep" value="NEW">
+          </form>
+        </div>  </div>  </div>
+
+      </div>
+    </div>
+
+
+    </div>
+  </div>
+</div></div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+      $('#both').click(function(){
+        alert("click");
+
+        var formData = $('#current_form').serialize();
+        console.log(formData);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'projects:records:keep_both_records' slug=project.slug pk=old_record.pk %}",
+            data: formData
+        }).done(function () {
+          alert("success");
+        });
+
+      });
+    });
+</script>
+
+{% endblock %}

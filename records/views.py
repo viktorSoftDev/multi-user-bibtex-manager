@@ -94,6 +94,57 @@ def clone_record(request, slug, pk):
         else:
             return HttpResponse("You don't have the permission to do this")
 
+
+
+@login_required
+def record_conflict(request, slug, pk):
+    project = Project.objects.get(slug=slug)
+    if request.method == 'POST':
+
+        if request.POST['keep'] == 'OLD':
+            # old is already saved, just dont save the new one
+            return redirect('projects:single', slug=slug)
+        elif request.POST['keep'] == 'NEW':
+            # delete old and save new!
+            record = get_object_or_404(models.Record, pk=pk)
+        form1 = forms.GeneralRecordForm(request.POST)
+        form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+        context = {
+            'form1':form1,
+            'project':project,
+            'form':form2,
+            }
+        if form2.is_valid() and form1.is_valid():
+            fields = [f.name for f in models.Record._meta.get_fields()]
+            data1 = form1.clean()
+            data2 = form2.clean()
+            if data1['entry_type'] == 'book':
+                if data2['author']== '' and data2['editor'] == '':
+                    context['err'] = True
+                    context['errmessage'] = "Fill in either Author or Editor"
+                    return render(request, 'records/record_form.html', context)
+            elif data1['entry_type'] == 'inbook':
+                if data2['author'] == '' and data2['editor'] == '':
+                    context['err'] = True
+                    context['errmessage'] = "Fill in either Author or Editor"
+                    return render(request, 'records/record_form.html', context)
+                elif data2['chapter'] == '' and data2['pages'] == '':
+                    context['err'] = True
+                    context['errmessage'] = "Fill in either Chapter or Pages"
+                    return render(request, 'records/record_form.html', context)
+            record.entry_type = data1['entry_type']
+            record.cite_key = data1['cite_key']
+            record.project = project
+            for fieldname in fields:
+                if fieldname in data2:
+                    setattr(record, fieldname, data2[fieldname])
+            record.save()
+        else:
+            context['err'] = True
+            return render(request, 'records/record_form.html', context)
+        return redirect('projects:single', slug=slug)
+
+
 @login_required
 def edit_record(request, slug, pk):
     """
@@ -113,17 +164,35 @@ def edit_record(request, slug, pk):
                 form1 = forms.GeneralRecordForm(request.POST)
                 form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
                 if form2.is_valid() and form1.is_valid():
-                    fields = [f.name for f in models.Record._meta.get_fields()]
-                    data1 = form1.clean()
-                    data2 = form2.clean()
-                    record.entry_type = data1['entry_type']
-                    record.cite_key = data1['cite_key']
-                    record.project = project
-                    for fieldname in fields:
-                        if fieldname in data2:
-                            setattr(record, fieldname, data2[fieldname])
-                    record.save()
-                    return redirect('projects:single', slug=slug)
+                    # making sure no one has edited the record while session is running
+                    print("from db: " + record.last_edited.__str__())
+                    print("from session: " + request.COOKIES.get('last_edited'))
+                    if record.last_edited.__str__() != request.COOKIES.get('last_edited'):
+                        fields = [f.name for f in models.Record._meta.get_fields()]
+                        data1 = form1.clean()
+                        data2 = form2.clean()
+                        record.entry_type = data1['entry_type']
+                        record.cite_key = data1['cite_key']
+                        record.project = project
+                        for fieldname in fields:
+                            if fieldname in data2:
+                                setattr(record, fieldname, data2[fieldname])
+                        record.save()
+                        return redirect('projects:single', slug=slug)
+                    else:
+                        # someone changed the record before you managed to save
+
+                        data = forms.ShowRecordForm(data=model_to_dict(record), entry=record.entry_type)
+                        context = {
+                            'old_record':record,
+                            'form1':form1,
+                            'project':project,
+                            'form':form2,
+                            'data':data
+                        }
+
+                        return render(request, 'records/record_conflict.html', context)
+
                 else:
                     context = {
                         'form1':form1,
@@ -144,7 +213,10 @@ def edit_record(request, slug, pk):
                 'project':project,
                 'record':record
             }
-            return render(request, 'records/record_edit.html', context)
+            response = render(request, 'records/record_edit.html', context)
+            print("before: " + record.last_edited.__str__())
+            response.set_cookie('last_edited', record.last_edited.__str__())
+            return response
         else:
             return HttpResponse("You don't have the permission to do this")
 
@@ -185,10 +257,30 @@ def create_record(request, slug):
             if request.method == 'POST':
                 form1 = forms.GeneralRecordForm(request.POST)
                 form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+                context = {
+                    'form1':form1,
+                    'project':project,
+                    'form':form2,
+                    }
                 if form2.is_valid() and form1.is_valid():
                     fields = [f.name for f in models.Record._meta.get_fields()]
                     data1 = form1.clean()
                     data2 = form2.clean()
+
+                    if data1['entry_type'] == 'book':
+                        if data2['author']== '' and data2['editor'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Author or Editor"
+                            return render(request, 'records/record_form.html', context)
+                    elif data1['entry_type'] == 'inbook':
+                        if data2['author'] == '' and data2['editor'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Author or Editor"
+                            return render(request, 'records/record_form.html', context)
+                        elif data2['chapter'] == '' and data2['pages'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Chapter or Pages"
+                            return render(request, 'records/record_form.html', context)
                     record = models.Record()
                     record.entry_type = data1['entry_type']
                     record.cite_key = data1['cite_key']
@@ -197,18 +289,15 @@ def create_record(request, slug):
                         if fieldname in data2:
                             setattr(record, fieldname, data2[fieldname])
                     record.save()
+                    print("made it")
                     return redirect('projects:single', slug=slug)
                 else:
-                    context = {
-                        'form1':form1,
-                        'project':project,
-                        'form':form2,
-                        'err':True
-                    }
+                    print("not valid")
+                    context['err'] = True
                     return render(request, 'records/record_form.html', context)
 
             else:
-
+                print("didnt")
                 context = {
                     'form1':form1,
                     'project':project,
@@ -216,6 +305,12 @@ def create_record(request, slug):
             return render(request, 'records/record_form.html', context)
         else:
             return HttpResponse("You don't have the permission to do this")
+
+@login_required
+def keep_both_records(request, slug, pk):
+    formData = request.GET.get('entry_type',None)
+    print(formData)
+    return HttpResponse("hello")
 
 @login_required
 def specific_form_ajax(request, slug, entry):

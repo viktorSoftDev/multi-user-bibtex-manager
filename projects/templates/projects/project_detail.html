@@ -40,6 +40,7 @@
     </div> <!-- close row -->
         <div class="row">
           <div class="col s12">
+            {% if userperm.is_owner or userperm.is_editor %}
             {% if duplicates %}
               <h3>There are duplicates in your project!</h3>
               <ul class="collection">
@@ -47,8 +48,12 @@
                   <a class="collection-item" href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}">
                     KEY: {{ record.cite_key }},
                     {% if record.title %}
-                      TITLE: {{ record.title|truncatechars:80 }}
+                      TITLE: {{ record.title|truncatechars:80 }},
                     {% endif %}
+
+                    LAST EDITED: {{ record.last_edited }}
+
+
                   <div class="secondary-content">
                     <i class="material-icons right">edit</i>
 
@@ -59,9 +64,10 @@
               </ul>
 
             {% endif %}
+            {% endif %}
           </div>
-          <div class="input-field col s12">
-            <select id="colselect" multiple label="Fields">
+          <div class="input-field col s10">
+            <select id="colselect" multiple>
               <option class="toggleColumn" value="11" selected>Address</option>
               <option class="toggleColumn" value="12">Annote</option>
               <option class="toggleColumn" value="3" selected>Author</option>
@@ -87,6 +93,10 @@
               <option class="toggleColumn" value="23">Type</option>
               <option class="toggleColumn" value="24">Volume</option>
               <option class="toggleColumn" value="7" selected>Year</option>
+              <option class="toggleColumn" value="25">url</option>
+              <option class="toggleColumn" value="26">Note</option>
+              <option class="toggleColumn" value="27">Key</option>
+
               {% if userperm.is_reader %}
               {% else %}
               <option class="toggleColumn" value="25" selected>_Actions_</option>
@@ -94,6 +104,15 @@
             </select>
             <label>Choose what fields to show</label>
           </div>
+            <div class="input-field col s2">
+              <select id="numentries" class="" name="" label="Records">
+                <option class="rows" value="10">10</option>
+                <option class="rows" value="20" selected>20</option>
+                <option class="rows" value="50">50</option>
+                <option class="rows" value="100">100</option>
+              </select>
+              <label>Records/Page</label>
+            </div>
 
               <table class="mdl-data-table " style="width:100%" id="example">
                 <!-- TABLE HEAD -->
@@ -124,6 +143,9 @@
                     <th>Series</th>
                     <th>Type</th>
                     <th>Volume</th>
+                    <th>url</th>
+                    <th>Note</th>
+                    <th>Key</th>
                     {% if userperm.is_reader %}
                     {% else %}
                     <th><span class="right">_Actions_</span></th>
@@ -254,6 +276,15 @@
                       </td>
                       <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
                         {% if record.volume %}{{ record.volume }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.url %}{{ record.url }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.note %}{{ record.note }}{% else %}-{% endif %}
+                      </td>
+                      <td class="clickable-row" data-href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">
+                        {% if record.key %}{{ record.key }}{% else %}-{% endif %}
                       </td>
                       {% if userperm.is_reader %}
                       {% else %}
@@ -395,6 +426,11 @@ allCol.addEventListener('change', function() {
   var col = document.querySelectorAll('.toggleColumn');
   renderTable(col)
  });
+var allrow = document.querySelector('#numentries');
+allrow.addEventListener('change', function(){
+  var col = document.querySelectorAll('.toggleColumn');
+  renderTable(col)
+});
 
 function renderTable(col){
   columnList = []
@@ -406,7 +442,14 @@ function renderTable(col){
     }
 
   }
-
+  var numrow;
+  var rows = document.querySelectorAll('.rows');
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].selected) {
+      numrow = rows[i].value
+    }
+  }
+  console.log(numrow);
   // Initializing datatables. must be reinitialized every time there is a change
   // due to how the plugin is configured. therefore destroy = true.
   $('#example').DataTable({
@@ -415,7 +458,7 @@ function renderTable(col){
     "order": [[ 2, "asc" ]],
     "scrollX": true,
     "sDom": 'frtip',
-    "iDisplayLength": 20,
+    "iDisplayLength": parseInt(numrow),
     "searchPlaceholder":"something",
     language: {
       search: "_INPUT_",

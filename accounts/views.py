@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+
 class SignUp(generic.CreateView):
     form_class = forms.UserCreateForm
 

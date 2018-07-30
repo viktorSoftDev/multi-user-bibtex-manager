@@ -17,15 +17,20 @@
         </span>
         <form id="record_form" class="" action="{% url 'projects:records:create' slug=project.slug %}" method="POST">
           {% csrf_token %}
-  {% form form=form1 %}{% endform %}
+          {% form form=form1 %}{% endform %}
           <div id="form2div">
-            {% if err %}{% form form=form %}{% endform %}{% endif %}<!-- Here comes the specific form through ajax. --> </div>
+            {% if err %}
+              {% if errmessage %}
+                <p class="red-text darken-1 center-align">{{ errmessage }}</p>
+              {% endif %}
+              {% form form=form %}{% endform %}<!-- Here comes the specific form through ajax. -->
 
-            <div class="test">
+            {% endif %}
+          </div>
 
-            </div>
-          <div class="center-align" id="submit_button" hidden>
-            <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light">ADD RECORD</button>
+
+          <div class="center-align" id="submit_button">
+            <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light indigo">ADD RECORD</button>
           </div>
         </form>
       </div>
@@ -103,9 +108,8 @@
       let v = $('#id_entry_type').val().toString();
       let url_string = form_urls[v];
       if (v < "------------") {
-        console.log(v);
         document.getElementById('form2div').innerHTML = "";
-        $('#submit_button').hide();
+      //  $('#submit_button').hide();
       }
       else {
         var formData = $('#record_form').serialize();
@@ -117,14 +121,8 @@
           document.getElementById('form2div').innerHTML = data;
         });
 
-        $('#submit_button').show();
-        let v = $('#id_entry_type').val().toString();
-        if (v === "book") {
-          let a = document.querySelector("#id_author");
-          console.log(a);
-        } else if (v === "inbook") {
+    //    $('#submit_button').show();
 
-        }
       }
     };
 
@@ -139,9 +137,7 @@
           get_form();
 
         });
-        $('#submit_button').click(function(){
-          validate_form();
-        })
+
 
 
 

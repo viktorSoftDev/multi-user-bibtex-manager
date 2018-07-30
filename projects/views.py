@@ -107,6 +107,7 @@ def project_settings(request, slug):
             'memberships':memberships,
             'userperm':project.memberships.get(user=request.user),
             'user':request.user,
+            'admins':project.memberships.filter(is_owner=True).count(),
         }
         template = 'projects/project_settings.html'
         return render(request, template, context)

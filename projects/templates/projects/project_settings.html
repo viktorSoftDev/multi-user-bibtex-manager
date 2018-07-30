@@ -98,7 +98,7 @@
         </div>
         <div class="card-action">
           <div class="right-align">
-            {% if memberships.count > 1 %}
+            {% if memberships.count > 1 and admins > 1 or not userperm.is_owner %}
             <a class="btn waves-effect waves-light orange" href="#leave_project{{ project.pk }}">
               <i class="material-icons left">block</i>
               Leave Project
@@ -142,7 +142,7 @@
      <h4 class="center-align">Are you sure you want to delete '{{ project.project_title }}'</h4>
      <p class="center-align">Deleting the project will also delete any records
      within the project. <br>This will delete the project for
-     everyone that is a projectmember. <br> {% if memberships.count > 1 %}To Delete
+     everyone that is a projectmember. <br> {% if memberships.count > 1 and admins > 1 %}To Delete
      the project locally; use the 'Leave' option.<br>{% endif %}
      Deleting this project can not be reversed.</p>
    </div>
@@ -150,7 +150,7 @@
     <div class="modal-action right-align">
 
       <a href="" class="modal-close btn-flat waves-effect waves-blue grey-text">Cancel</a>
-      {% if memberships.count > 1 %}
+      {% if memberships.count > 1 and admins > 1 %}
         <a href="{% url 'projects:leave' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-orange blue-grey-text">Leave project</a>
       {% endif %}
       <a href="{% url 'projects:delete' slug=project.slug %}" class="modal-close btn-flat waves-effect waves-red blue-grey-text">Delete project</a>

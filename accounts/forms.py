@@ -3,6 +3,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from material import Layout, Row, Fieldset
 from django import forms
 
+
+class MyLoginForm(AuthenticationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MyLoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'Email'
+
+
+
 class UserCreateForm(UserCreationForm):
 
 
