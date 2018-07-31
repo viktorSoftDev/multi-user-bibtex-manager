@@ -94,8 +94,6 @@
 
     $(document).ready(function() {
       $('#both').click(function(){
-        alert("click");
-
         var formData = $('#current_form').serialize();
         console.log(formData);
         $.ajax({
@@ -103,7 +101,7 @@
             url: "{% url 'projects:records:keep_both_records' slug=project.slug pk=old_record.pk %}",
             data: formData
         }).done(function () {
-          alert("success");
+          window.location.replace("{% url 'projects:single' slug=project.slug %}")
         });
 
       });

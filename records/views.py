@@ -167,7 +167,7 @@ def edit_record(request, slug, pk):
                     # making sure no one has edited the record while session is running
                     print("from db: " + record.last_edited.__str__())
                     print("from session: " + request.COOKIES.get('last_edited'))
-                    if record.last_edited.__str__() != request.COOKIES.get('last_edited'):
+                    if record.last_edited.__str__() == request.COOKIES.get('last_edited'):
                         fields = [f.name for f in models.Record._meta.get_fields()]
                         data1 = form1.clean()
                         data2 = form2.clean()
@@ -308,9 +308,44 @@ def create_record(request, slug):
 
 @login_required
 def keep_both_records(request, slug, pk):
-    formData = request.GET.get('entry_type',None)
-    print(formData)
-    return HttpResponse("hello")
+    project = Project.objects.get(slug=slug)
+    form1 = forms.GeneralRecordForm(request.POST)
+    form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+    context = {
+        'form1':form1,
+        'project':project,
+        'form':form2,
+        }
+    if form2.is_valid() and form1.is_valid():
+        fields = [f.name for f in models.Record._meta.get_fields()]
+        data1 = form1.clean()
+        data2 = form2.clean()
+        if data1['entry_type'] == 'book':
+            if data2['author']== '' and data2['editor'] == '':
+                context['err'] = True
+                context['errmessage'] = "Fill in either Author or Editor"
+                return render(request, 'records/record_form.html', context)
+        elif data1['entry_type'] == 'inbook':
+            if data2['author'] == '' and data2['editor'] == '':
+                context['err'] = True
+                context['errmessage'] = "Fill in either Author or Editor"
+                return render(request, 'records/record_form.html', context)
+            elif data2['chapter'] == '' and data2['pages'] == '':
+                context['err'] = True
+                context['errmessage'] = "Fill in either Chapter or Pages"
+                return render(request, 'records/record_form.html', context)
+        record = models.Record()
+        record.entry_type = data1['entry_type']
+        record.cite_key = data1['cite_key']
+        record.project = project
+        for fieldname in fields:
+            if fieldname in data2:
+                setattr(record, fieldname, data2[fieldname])
+        record.save()
+    else:
+        context['err'] = True
+        return render(request, 'records/record_form.html', context)
+    return redirect('projects:single', slug=slug)
 
 @login_required
 def specific_form_ajax(request, slug, entry):

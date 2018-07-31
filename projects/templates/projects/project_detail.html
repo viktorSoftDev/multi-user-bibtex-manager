@@ -45,20 +45,25 @@
               <h3>There are duplicates in your project!</h3>
               <ul class="collection">
                 {% for record in duplicates  %}
-                  <a class="collection-item" href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}">
-                    KEY: {{ record.cite_key }},
+
+                    <li class="collection-item">
+
+                    KEY: <a href="{% url 'projects:records:single' slug=project.slug pk=record.pk %}">{{ record.cite_key }}</a>,
                     {% if record.title %}
-                      TITLE: {{ record.title|truncatechars:80 }},
+                      TITLE: {{ record.title|truncatechars:50 }},
                     {% endif %}
 
                     LAST EDITED: {{ record.last_edited }}
 
+                    <a class="secondary-content" href="#delete_record{{ record.pk }}"><i class="material-icons">delete</i></a>
 
-                  <div class="secondary-content">
-                    <i class="material-icons right">edit</i>
 
-                  </div>
-                </a>
+                      <a class="secondary-content" href="{% url 'projects:records:edit' slug=project.slug pk=record.pk %}"><i class="material-icons">edit</i></a>
+
+
+
+                </li>
+
                 {% endfor %}
 
               </ul>
