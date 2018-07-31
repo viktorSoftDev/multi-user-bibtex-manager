@@ -67,7 +67,7 @@ class Record(models.Model):
 
 
     # A record belongs to a single project (to start with)
-    project =       models.ForeignKey(Project, related_name='records', on_delete=models.SET_NULL, null=True)
+    project =       models.ForeignKey(Project, related_name='records', on_delete=models.CASCADE, null=True)
     # A record is made by a user, and is considered his/hers
     # users = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 

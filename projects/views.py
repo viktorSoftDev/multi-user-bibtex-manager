@@ -431,18 +431,20 @@ class JoinProject(LoginRequiredMixin, generic.RedirectView):
 
         return super().get(request, *args,**kwargs)
 
-class DeleteProject(LoginRequiredMixin, generic.DeleteView):
-    """
-    Only admin should be able to! How to ensure in this CBV? recreate a FBV?
-    """
-    model = Project
-
-    success_url = reverse_lazy('projects:all')
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(members=self.request.user)
-
-    def delete(self, *args, **kwargs):
-        messages.success(self.request, 'Project Deleted')
-        return super().delete(*args,**kwargs)
+@login_required
+def delete_project(request, slug):
+    try:
+        ProjectMember.objects.get(user=request.user, project=Project.objects.get(slug=slug))
+    except ObjectDoesNotExist:
+        return HttpResponse("You're trying to access a project you're not a member of or a project that does not exist.")
+    else:
+        if ProjectMember.objects.get(user=request.user, project=Project.objects.get(slug=slug)).is_owner:
+            try:
+                project = get_object_or_404(Project, slug=slug)
+            except ObjectDoesNotExist:
+                messages.warning(self.request, 'Warning: The project could not be found and therefore not removed')
+            else:
+                project.delete()
+            return redirect('projects:all')
+        else:
+            return HttpResponse("You don't have the permission to do this")
