@@ -3,7 +3,7 @@ This file contains data structures defining fields and types
 that are used to render the correct forms in records/forms.py
 
 The information has been gathered from:
-http://bib-it.sourceforge.net/help/fieldsAndEntryTypes.php
+wikipedia
 
 """
 
@@ -138,7 +138,7 @@ INBOOK_FIELDS =  [
     ]
 ]
 
-INCOLLECTIONS_FIELDS = [
+INCOLLECTION_FIELDS = [
     [
         "title",
         "author",
@@ -319,7 +319,7 @@ ENTRY_TYPE_FIELDS = {
     "booklet":BOOKLET_FIELDS,
     "conference":CONFERENCE_FIELDS,
     "inbook":INBOOK_FIELDS,
-    "incollections":INCOLLECTIONS_FIELDS,
+    "incollection":INCOLLECTION_FIELDS,
     "inproceedings":INPROCEEDINGS_FIELDS,
     "manual":MANUAL_FIELDS,
     "mastersthesis":MASTERSTHESIS_FIELDS,

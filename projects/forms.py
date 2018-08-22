@@ -3,12 +3,13 @@ from django import forms
 from . import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.text import slugify
-
-
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class CreateProjectForm(forms.ModelForm):
+    """
+    This form class handles the creation of a new project
+    """
     class Meta:
         model = models.Project
         fields = ['project_title', 'description']
@@ -23,9 +24,15 @@ class CreateProjectForm(forms.ModelForm):
             pass
 
 class ImportFileForm(forms.Form):
+    """
+    Simple file input form for the import file functionality
+    """
     file = forms.FileInput()
 
 class ProjectMemberForm(forms.Form):
+    """
+    This form allows an admin to change the project members' permissions
+    """
     PERM_CHOICES = (
         ('is_owner','Admin'),
         ('is_editor','Read&Write'),
@@ -35,6 +42,9 @@ class ProjectMemberForm(forms.Form):
 
 
 class InviteForm(forms.Form):
+    """
+    This fowm allows a project admin to invite other users
+    """
     PERM_CHOICES = (
         ('is_owner','Admin'),
         ('is_editor','Read&Write'),
@@ -49,6 +59,9 @@ class InviteForm(forms.Form):
         super(InviteForm, self).__init__(*args,**kwargs)
 
     def clean(self):
+        """
+        Overwriting the clean method to add in extra validation
+        """
         cleaned_data = super(InviteForm, self).clean()
         email = cleaned_data.get('email')
         message = cleaned_data.get('message')

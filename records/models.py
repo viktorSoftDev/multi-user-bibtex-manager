@@ -1,15 +1,8 @@
 from django.db import models
 from django.urls import reverse
-from django.conf import Settings
 from datetime import datetime
-from django.utils.text import slugify
-
-# POST MODELS.PY
-# Create your models here.
-
 from projects.models import Project
 from records.choices import *
-
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -20,6 +13,7 @@ class Record(models.Model):
     all the various entry types. This will reduce
     repetition and simplify the relationship between
     Records and other models.
+    All these fields have been gathered from wikipedia
     """
 
     entry_type =    models.CharField(max_length=64, choices=ENTRY_TYPE_CHOICES)
@@ -68,18 +62,9 @@ class Record(models.Model):
 
     # A record belongs to a single project (to start with)
     project =       models.ForeignKey(Project, related_name='records', on_delete=models.CASCADE, null=True)
-    # A record is made by a user, and is considered his/hers
-    # users = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
+    # used to avoid editing conflicts
     last_edited =   models.DateTimeField(default=datetime.now)
-
-    # def destroy(self):
-    #     """
-    #     Checks if both project and user is null.
-    #     If True => delete
-    #     """
-    #     if self.project == null and self.users == null:
-    #         self.delete()
 
     def __str__(self):
         return self.title
@@ -90,10 +75,6 @@ class Record(models.Model):
 
     def get_absolute_url(self):
         return reverse('projects:records:single',kwargs={'slug':self.project.slug, 'pk':self.pk})
-
-
-
-
 
 
     class Meta:

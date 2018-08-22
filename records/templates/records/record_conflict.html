@@ -1,7 +1,7 @@
 
 
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 
@@ -56,20 +56,13 @@
               </form>
             </div>
           </div>
-
       </div>
-
-
       </div>
       <div class="col s6">
-
-
-
         <div class="section">
           <div class="card grey lighten-5">
             <div class="card-content">
           <h5 class="center-align">Current record</h5>
-
           <form id="current_form" class="" action="{% url 'projects:records:conflict' slug=project.slug pk=old_record.pk %}" method="POST">
             {% csrf_token %}
             <div class="center-align">
@@ -84,28 +77,15 @@
 
       </div>
     </div>
-
-
+      </div>
     </div>
   </div>
-</div></div>
+</div>
 
 <script type="text/javascript">
-
-    $(document).ready(function() {
-      $('#both').click(function(){
-        var formData = $('#current_form').serialize();
-        console.log(formData);
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'projects:records:keep_both_records' slug=project.slug pk=old_record.pk %}",
-            data: formData
-        }).done(function () {
-          window.location.replace("{% url 'projects:single' slug=project.slug %}")
-        });
-
-      });
-    });
+ var url_string = "{% url 'projects:records:keep_both_records' slug=project.slug pk=old_record.pk %}" ;
+ var redirect = "{% url 'projects:single' slug=project.slug %}"; 
 </script>
+<script type="text/javascript" src="{% static 'js/conflict.js' %}"></script>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title_block %}
-  My Projects
+
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,16 @@
       <div class="card-content">
         <div class="center-align">
             <span class="card-title"><h3>Welcome to a free Multi-User BibTeX Manager</h3></span>
-            <p>Some info about this application</p>
+            <p>This website is currently being developed and as a result it may not be functioning properly. Please feel free to try it out but I would not recommend using it as your primary bibliography manager, yet ;).
+<br> <br>
+The website is currently being evaluated and documented and will have an official launch date later this year.
+<br> <br>
+If you have any questions or concerns please contact me at 2277194e@student.gla.ac.uk and I will get back to you as soon as possible.
+<br> <br>
+Best regards,
+<br> <br>
+Viktor Eriksson
+</p>
         </div>
           <br>
         <div class="" style="height:400px">
@@ -30,9 +39,30 @@
       <div class="card-content">
         <div class="center-align">
             <span class="card-title"><h3>Welcome to a free Multi-User BibTeX Manager</h3></span>
-            <p>Some info about this application</p>
-        </div>
+            </div>
+            <p>This website is currently being developed and as a result it may not be functioning properly. Please feel free to try it out but I would not recommend using it as your primary bibliography manager, yet ;).
+<br> <br>
+The website is currently being evaluated and documented and will have an official launch date later this year.
+<br> <br>
+If you have any questions or concerns please <a href="mailto:2277194e@student.gla.ac.uk" target="_top">contact me</a> and I will get back to you as soon as possible.
+<br> <br>
+Best regards,
+<br> <br>
+Viktor Eriksson
+</p>
+
           <br>
+          Using this application you will be able to:
+          <ul>
+              <li><i class="material-icons">chevron_right</i>Add, Edit, Delete, View your BibTeX records</li>
+              <li><i class="material-icons">chevron_right</i>Import bibliographies from file (currently supports .bib files)</li>
+              <li><i class="material-icons">chevron_right</i>Export bibliographies to file (currently supports .bib files)</li>
+              <li><i class="material-icons">chevron_right</i>filter, search and sort through big bibliographies</li>
+              <li><i class="material-icons">chevron_right</i>Invite friends or collegues to work on your bibliography</li>
+              <li><i class="material-icons">chevron_right</i>Give your collegues different level of access (ReadOnly / ReadWrite / Admin)</li>
+          </ul>
+          <br>
+          <a href="{% url 'accounts:signup' %}">Sign up here</a>. If you wish to learn more about BibTeX visit <a href="http://www.bibtex.org/">www.bibtex.org</a>.
         <div class="" style="height:400px">
 
         </div>

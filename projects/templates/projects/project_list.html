@@ -20,14 +20,10 @@
 
             <span class="card-title"><h2>My Projects</h2></span>
             <p>Access your projects below or create a new one to get started!</p>
-
-
-
               <a href="{% url 'projects:create' %}" class="btn indigo btn-medium waves waves-effect">Create New Project</a>
-
-      </div>
-<br>
-
+            </div>
+            <br>
+            
           {% if invites %}
             <ul class="collection with-header">
               <li class="collection-header grey lighten-2"><h4>Project Invitations</h4></li>
@@ -76,27 +72,8 @@
                 {% endfor %}
               </ul>
 {% endif %}
-
-
-
       </div>
     </div>
   </div>
-
 </div>
-
-
-<script>
-$(document).ready(function(){
-  $('.modal').modal();
-});
-
-</script>
-
-
-
-{% endblock %}
-
-{% block postproject %}
-
 {% endblock %}

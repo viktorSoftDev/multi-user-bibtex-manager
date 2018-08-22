@@ -5,22 +5,21 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.material.min.css">
 {% endblock %}
 
-{% block breadcrumb %}
-<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
-<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
-{% if userperm.is_reader %}
-{% else %}
-  <a href="" class="breadcrumb">
-    <a  href="{% url 'projects:records:create' slug=project.slug %}"
-        class="btn btn-small waves-light waves-effect cyan darken-3">
-        Add entry
-    </a>
-  </a>
-{% endif %}
-{% endblock %}
+    {% block breadcrumb %}
+      <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+      <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title }}</a>
+      {% if userperm.is_reader %}
+      <!-- Do nothing -->
+      {% else %}
+        <a href="" class="breadcrumb">
+          <a  href="{% url 'projects:records:create' slug=project.slug %}"
+              class="btn btn-small waves-light waves-effect cyan darken-3">
+              Add entry
+          </a>
+        </a>
+      {% endif %}
+    {% endblock %}
 
-
-{% block preproject %}{% endblock %}
 
 {% block project_content %}
 
@@ -73,7 +72,7 @@
           </div>
           <div class="input-field col s10">
             <select id="colselect" multiple>
-              <option class="toggleColumn" value="11" selected>Address</option>
+              <option class="toggleColumn" value="11">Address</option>
               <option class="toggleColumn" value="12">Annote</option>
               <option class="toggleColumn" value="3" selected>Author</option>
               <option class="toggleColumn" value="13">Booktitle</option>
@@ -419,76 +418,9 @@
       </div> <!-- CLOSE row -->
 
 
-
+<!-- CDNs for DataTable jQuery plugin  -->
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
-<!-- SCRIPTS TO BE MOVED TO SEPARATE FILE -->
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.material.min.js"></script>
-<script>
+<script type="text/javascript" src="{% static 'js/project.js' %}"></script>
 
-var allCol = document.querySelector('#colselect');
-allCol.addEventListener('change', function() {
-  var col = document.querySelectorAll('.toggleColumn');
-  renderTable(col)
- });
-var allrow = document.querySelector('#numentries');
-allrow.addEventListener('change', function(){
-  var col = document.querySelectorAll('.toggleColumn');
-  renderTable(col)
-});
-
-function renderTable(col){
-  columnList = []
-  for (var i = 0; i < col.length; i++) {
-    columnList[i] = {
-      "targets": [parseInt(col[i].value)],
-      "visible": col[i].selected,
-      className: 'mdl-data-table__cell--non-numeric',
-    }
-
-  }
-  var numrow;
-  var rows = document.querySelectorAll('.rows');
-  for (var i = 0; i < rows.length; i++) {
-    if (rows[i].selected) {
-      numrow = rows[i].value
-    }
-  }
-  console.log(numrow);
-  // Initializing datatables. must be reinitialized every time there is a change
-  // due to how the plugin is configured. therefore destroy = true.
-  $('#example').DataTable({
-    // Thx to datatables.net for this jquery plugin
-    "destroy":true,
-    "order": [[ 2, "asc" ]],
-    "scrollX": true,
-    "sDom": 'frtip',
-    "iDisplayLength": parseInt(numrow),
-    "searchPlaceholder":"something",
-    language: {
-      search: "_INPUT_",
-      searchPlaceholder: "Filter by anything...",
-       "lengthMenu": "Display _MENU_ records",
-    },
-    "columnDefs": columnList
-  });
-};
-
-jQuery(document).ready(function($) {
-    $('.modal').modal();
-    $('.fixed-action-btn').floatingActionButton({});
-    $('.fixed-action-btn').floatingActionButton('open');
-    $('select').formSelect();
-    $('.tooltipped').tooltip({delay:50});
-    renderTable(document.querySelectorAll('.toggleColumn'));
-
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-
-
-
-});
-
-</script>
 {% endblock %}

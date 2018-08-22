@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load material_form %}
+
 
 {% block content_account %}
 <br>
@@ -10,42 +10,18 @@
         <span class="card-title"><h1 class="center-align">Sign Up</h1></span>
         <h4 class="center-align hide-on-med-and-down">Fill in the form below to register. <br>
                                 Already a member? <a href="{% url 'accounts:login' %}">Log in</a> instead!</h4>
-
-
-
-
             <br>
-
-
-
-              <form class="viewform" method="POST">
-                {% csrf_token %}
-                {% form form=form %} {% endform %}
-                <br>
-                <div class="center-align">
-                  <button type="submit" name="_submit" class="btn btn-large center waves waves-effect indigo">Sign Up</button>
-
-                </div>
-              </form>
-
-
-
-
-
+        <form class="viewform" method="POST">
+          {% csrf_token %}
+          {% form form=form %} {% endform %}
+          <br>
+          <div class="center-align">
+            <button type="submit" name="_submit" class="btn btn-large center waves waves-effect indigo">Sign Up</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-
-</div>
-
-
-
-
-<div class="container signup">
-  <h1 class="text-align center"></h1>
-  <h4 class="text-align center"></h4>
-
-
 </div>
 
 {% endblock %}

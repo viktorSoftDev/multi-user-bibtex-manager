@@ -1,6 +1,5 @@
 {% extends "records/record_base.html" %}
-{% load material_form %}
-
+{% load static %}
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title.capitalize }}</a>
@@ -29,7 +28,7 @@
           </div>
 
 
-          <div class="center-align" id="submit_button">
+          <div class="center-align" id="submit_button" hidden>
             <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light indigo">ADD RECORD</button>
           </div>
         </form>
@@ -38,111 +37,13 @@
   </div>
 </div>
 
-    <script>
 
+<script type="text/javascript">
+  // This variable needs to be here, since django's template tags do not work in separate files.
+  url_string = "{% url 'projects:records:specific-form-ajax' slug=project.slug %}"
+</script>
 
-
-    // MIGHT work
-    // var authorfields = 0;
-    // function addField(el){
-    //   console.log(el);
-    //   console.log(el.value.length);
-    //   if (el.value.length === 1){
-    //       var div = document.createElement("div");
-    //       div.class = "input-field col s11";
-    //       var node = document.createElement("input");
-    //       node.setAttribute("placeholder", "Add an additional author");
-    //       node.setAttribute("class", "new-author-field");
-    //       node.setAttribute("type", "text");
-    //       node.setAttribute("onkeydown", "NewField(this)");
-    //       div.appendChild(node);
-    //
-    //       console.log(el.parentNode);
-    //       var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
-    //       authorfields +=1;
-    //   };
-    // };
-    //
-    // function NewField(el){
-    //   if (el.value.length === 0){
-    //     console.log("zero");
-    //     // if filled in add a new field
-    //
-    //     // else if empty delete next IF next is empty
-    //     console.log('authorfields: ' + authorfields);
-    //     console.log('nodes: ' + el.parentNode.parentNode.childNodes.length);
-    //     if (el.parentNode.childNodes.length == authorfields){
-    //       var div = document.createElement("div");
-    //       div.class = "input-field col s12";
-    //       var node = document.createElement("input");
-    //       node.setAttribute("placeholder", "Add an additional author");
-    //       node.setAttribute("class", "new-author-field");
-    //       node.setAttribute("type", "text");
-    //       node.setAttribute("onkeydown", "NewField(this)");
-    //       div.appendChild(node);
-    //       var newel = el.parentNode.parentNode.insertBefore(div, el.parentNode.nextSibling);
-    //       authorfields += 1;
-    //     };
-    //   };
-    // };
-
-
-      var form_urls ={
-        'article' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='article' %}",
-        'book' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='book' %}",
-        'booklet' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='booklet' %}",
-        'conference' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='conference' %}",
-        'inbook' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='inbook' %}",
-        'incollections' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='incollections' %}",
-        'inproceedings' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='inproceedings' %}",
-        'manual' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='manual' %}",
-        'mastersthesis' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='mastersthesis' %}",
-        'misc' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='misc' %}",
-        'phdthesis' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='phdthesis' %}",
-        'proceedings' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='proceedings' %}",
-        'techreport' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='techreport' %}",
-        'unpublished' : "{% url 'projects:records:specific-form-ajax' slug=project.slug entry='unpublished' %}",
-    }
-
-    function get_form(){
-      let v = $('#id_entry_type').val().toString();
-      let url_string = form_urls[v];
-      if (v < "------------") {
-        document.getElementById('form2div').innerHTML = "";
-      //  $('#submit_button').hide();
-      }
-      else {
-        var formData = $('#record_form').serialize();
-        $.ajax({
-            type: 'POST',
-            url: url_string,
-            data: formData
-        }).done(function (data) {
-          document.getElementById('form2div').innerHTML = data;
-        });
-
-    //    $('#submit_button').show();
-
-      }
-    };
-
-
-    function validate_form() {
-      var formData = $('#record_form').serialize()
-      console.log(formData);
-    };
-
-      $(document).ready(function(){
-        $('#id_entry_type').change(function(){
-          get_form();
-
-        });
-
-
-
-
-      });
-    </script>
+<script type="text/javascript" src="{% static 'js/record_form.js' %}"></script>
 
 
 

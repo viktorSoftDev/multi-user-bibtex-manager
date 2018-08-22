@@ -5,7 +5,7 @@ ENTRY_TYPE_CHOICES = (
     ("booklet", "booklet"),
     ("conference", "conference"),
     ("inbook", "inbook"),
-    ("incollections", "incollections"),
+    ("incollection", "incollection"),
     ("inproceedings", "inproceedings"),
     ("manual", "manual"),
     ("mastersthesis", "mastersthesis"),

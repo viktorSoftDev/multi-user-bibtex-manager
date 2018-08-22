@@ -1,5 +1,8 @@
 from material import *
 
+"""
+This file contains all the layouts for the various forms
+"""
 
 ARTICLE_LAYOUT = Layout(Fieldset("Required Fields [article]",
                 'title',
@@ -81,7 +84,7 @@ INBOOK_LAYOUT = Layout(Fieldset("Required Fields [inbook]",
                 "key")
                 )
 
-INCOLLECTIONS_LAYOUT = Layout(Fieldset("Required Fields [incollections]",
+INCOLLECTION_LAYOUT = Layout(Fieldset("Required Fields [incollections]",
                     "title",
                     "author",
                     "booktitle",
@@ -214,7 +217,7 @@ FORM_LAYOUT = {
     "booklet":BOOKLET_LAYOUT,
     "conference":CONFERENCE_LAYOUT,
     "inbook":INBOOK_LAYOUT,
-    "incollections":INCOLLECTIONS_LAYOUT,
+    "incollection":INCOLLECTION_LAYOUT,
     "inproceedings":INPROCEEDINGS_LAYOUT,
     "manual":MANUAL_LAYOUT,
     "mastersthesis":MASTERSTHESIS_LAYOUT,

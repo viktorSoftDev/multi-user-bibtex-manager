@@ -1,15 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
-
-
-# projects MODELS.PY
-# Create your models here.
-
 from django.contrib.auth import get_user_model
-User = get_user_model()
-
 from django import template
+User = get_user_model()
 register = template.Library()
 
 
@@ -18,9 +12,11 @@ register = template.Library()
 class Project(models.Model):
     project_title = models.CharField(max_length=200)
     description = models.TextField(max_length=500, blank=True)
+
+    # This slug should be edited to allow for projects with the same name.
     slug = models.SlugField(allow_unicode=True, unique=True)
-    # Users could later be split up in RO_users and
-    # RW_users for different permissions
+
+    # A project can have many members, and users can be members of many projects.
     members = models.ManyToManyField(User, through="ProjectMember")
 
 
@@ -39,6 +35,9 @@ class Project(models.Model):
         ordering = ['project_title']
 
 class ProjectMember(models.Model):
+    """
+    This project member class allows for further customization and access control
+    """
     project = models.ForeignKey(Project, related_name='memberships', on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name='user_projects', on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
@@ -53,6 +52,10 @@ class ProjectMember(models.Model):
 
 
 class Invitation(models.Model):
+    """
+    This model stores the invitation that can either be declined (deleted) or,
+    if accepted, the information stored here can be used to define a new membership
+    """
     project = models.ForeignKey(Project, related_name='invites', on_delete=models.CASCADE)
     sender = models.ForeignKey(User, related_name='user_invites_sent', on_delete=models.CASCADE)
     reciever = models.ForeignKey(User, related_name='user_invites_recieved', on_delete=models.CASCADE)
