@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from datetime import datetime
+from django.utils import timezone
+import pytz
 from projects.models import Project
 from records.choices import *
 from django.contrib.auth import get_user_model
@@ -64,13 +66,13 @@ class Record(models.Model):
     project =       models.ForeignKey(Project, related_name='records', on_delete=models.CASCADE, null=True)
 
     # used to avoid editing conflicts
-    last_edited =   models.DateTimeField(default=datetime.now)
+    last_edited =   models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
 
     def save(self, *args,**kwargs):
-        last_edited = datetime.now()
+        last_edited = timezone.now()
         super().save(*args,**kwargs)
 
     def get_absolute_url(self):

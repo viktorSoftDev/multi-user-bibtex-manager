@@ -3,7 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.forms.models import model_to_dict
 from records.data import *
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from django.utils import timezone
+import pytz
 from projects.models import ProjectMember, Project
 from . import models
 from . import forms
@@ -74,7 +75,7 @@ def clone_record(request, slug, pk):
                     data2 = form2.clean()
                     record.entry_type = data1['entry_type']
                     record.cite_key = data1['cite_key']
-                    record.last_edited = datetime.now()
+                    record.last_edited = timezone.now()
                     record.save()
                     # Send user back to project detail, the overview of all records in the project.
                     return redirect('projects:single', slug=slug)
@@ -151,7 +152,7 @@ def record_conflict(request, slug, pk):
                 for fieldname in fields:
                     if fieldname in data2:
                         setattr(record, fieldname, data2[fieldname])
-                record.last_edited = datetime.now()
+                record.last_edited = timezone.now()
                 record.save()
             else:
                 # form is not valid
@@ -219,7 +220,7 @@ def edit_record(request, slug, pk):
                         for fieldname in fields:
                             if fieldname in data2:
                                 setattr(record, fieldname, data2[fieldname])
-                        record.last_edited = datetime.now()
+                        record.last_edited = timezone.now()
                         record.save()
                         # Send user back to project detail, the overview of all records in the project.
                         return redirect('projects:single', slug=slug)
