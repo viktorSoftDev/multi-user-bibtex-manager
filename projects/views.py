@@ -132,6 +132,8 @@ def edit_project_settings(request, slug):
                 if form.is_valid():
                     # form is valid - Save
                     form.save()
+                    # slug could have been updated - make sure we redirect to the updated slug
+                    slug = project.slug
                     return redirect('projects:settings', slug=slug)
             return render(request, 'projects/project_edit.html', {'form':form, 'project':project})
         else:
