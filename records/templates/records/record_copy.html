@@ -4,6 +4,7 @@
 {% block breadcrumb %}
 <a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
 <a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title.capitalize }}</a>
+<a href="{% url 'projects:records:clone' slug=project.slug pk=record.pk %}" class="breadcrumb">Clone Entry</a>
 
 {% endblock %}
 

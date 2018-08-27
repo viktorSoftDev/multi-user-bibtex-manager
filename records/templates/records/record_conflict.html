@@ -2,6 +2,13 @@
 
 {% extends "base.html" %}
 {% load static %}
+
+{% block breadcrumb %}
+<a href="{% url 'projects:all' %}" class="breadcrumb">My Projects</a>
+<a href="{% url 'projects:single' slug=project.slug %}" class="breadcrumb">{{ project.project_title.capitalize }}</a>
+<a class="breadcrumb">Conflict</a>
+{% endblock %}
+
 {% block content %}
 
 
@@ -71,7 +78,7 @@
             <hr>
             {% form form=form1 %}{% endform %}
             {% form form=form %}{% endform %}
-            <input hidden type="text" name="keep" value="NEW">
+            <input id="new_or_both" hidden type="text" name="keep" value="NEW">
           </form>
         </div>  </div>  </div>
 
@@ -82,10 +89,7 @@
   </div>
 </div>
 
-<script type="text/javascript">
- var url_string = "{% url 'projects:records:keep_both_records' slug=project.slug pk=old_record.pk %}" ;
- var redirect = "{% url 'projects:single' slug=project.slug %}"; 
-</script>
+
 <script type="text/javascript" src="{% static 'js/conflict.js' %}"></script>
 
 {% endblock %}

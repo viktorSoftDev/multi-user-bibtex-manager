@@ -88,6 +88,7 @@ def clone_record(request, slug, pk):
                     'form1':form1,
                     'project':project,
                     'form2':form2,
+                    'record':record,
                 }
                 return render(request, 'records/record_copy.html', context)
         else:
@@ -110,6 +111,7 @@ def record_conflict(request, slug, pk):
     else:
         # User is a member,
         project = Project.objects.get(slug=slug)
+        old_record = get_object_or_404(models.Record, pk=pk)
         if request.method == 'POST':
             # User has decided which record(s) to keep
             if request.POST['keep'] == 'OLD':
@@ -118,13 +120,19 @@ def record_conflict(request, slug, pk):
             elif request.POST['keep'] == 'NEW':
                 # delete old and save new!
                 record = get_object_or_404(models.Record, pk=pk)
+            elif request.POST['keep'] == 'BOTH':
+                # dont delete old, save new.
+                record = models.Record()
             # User has decided to save both or the new one
             form1 = forms.GeneralRecordForm(request.POST)
             form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+            data = forms.ShowRecordForm(data=model_to_dict(old_record), entry=old_record.entry_type)
             context = {
+                'old_record':old_record,
                 'form1':form1,
                 'project':project,
                 'form':form2,
+                'data':data
                 }
             if form2.is_valid() and form1.is_valid():
                 fields = [f.name for f in models.Record._meta.get_fields()]
@@ -135,16 +143,16 @@ def record_conflict(request, slug, pk):
                     if data2['author']== '' and data2['editor'] == '':
                         context['err'] = True
                         context['errmessage'] = "Fill in either Author or Editor"
-                        return render(request, 'records/record_form.html', context)
+                        return render(request, 'records/record_conflict.html', context)
                 elif data1['entry_type'] == 'inbook':
                     if data2['author'] == '' and data2['editor'] == '':
                         context['err'] = True
                         context['errmessage'] = "Fill in either Author or Editor"
-                        return render(request, 'records/record_form.html', context)
+                        return render(request, 'records/record_conflict.html', context)
                     elif data2['chapter'] == '' and data2['pages'] == '':
                         context['err'] = True
                         context['errmessage'] = "Fill in either Chapter or Pages"
-                        return render(request, 'records/record_form.html', context)
+                        return render(request, 'records/record_conflict.html', context)
                 # Form is valid .. save into new record
                 record.entry_type = data1['entry_type']
                 record.cite_key = data1['cite_key']
@@ -157,7 +165,7 @@ def record_conflict(request, slug, pk):
             else:
                 # form is not valid
                 context['err'] = True
-                return render(request, 'records/record_form.html', context)
+                return render(request, 'records/record_conflict.html', context)
             # Send user back to project detail, the overview of all records in the project.
             return redirect('projects:single', slug=slug)
 
@@ -212,7 +220,7 @@ def edit_record(request, slug, pk):
                             return render(request, 'records/record_edit.html', context)
                     # Form is valid .. save into new record
                     # making sure no one has edited the record while session is running
-                    if record.last_edited.__str__() == request.COOKIES.get('last_edited'):
+                    if record.last_edited.__str__() != request.COOKIES.get('last_edited'):
                         # No conflict, go on save changes.
                         record.entry_type = data1['entry_type']
                         record.cite_key = data1['cite_key']
@@ -370,70 +378,4 @@ def create_record(request, slug):
                 return render(request, 'records/record_form.html', context)
         else:
             # Access denied..
-            return HttpResponse("You don't have the permission to do this")
-
-@login_required
-def keep_both_records(request, slug, pk):
-    """
-    This view is only available for projectmembers with editing permissions.
-    This view saves handles the logic to save both of the records in case of a conflict.
-    """
-    # Try except to make sure the user is a member of this project
-    try:
-        ProjectMember.objects.get(user=request.user, project=Project.objects.get(slug=slug))
-    except ObjectDoesNotExist:
-        # User is not a member
-        return HttpResponse("You're trying to access a project you're not a member of or a project that does not exist.")
-    else:
-        # User is a member
-
-        # Access control.. if not owner or editor - access denied.
-        if pm.is_owner or pm.is_editor:
-            # User has access
-            project = Project.objects.get(slug=slug)
-            form1 = forms.GeneralRecordForm(request.POST)
-            form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
-            context = {
-                'form1':form1,
-                'project':project,
-                'form':form2,
-                'record':models.Record.objects.get(pk=pk),
-                }
-
-            if form2.is_valid() and form1.is_valid():
-                # Additional form validation
-                fields = [f.name for f in models.Record._meta.get_fields()]
-                data1 = form1.clean()
-                data2 = form2.clean()
-                if data1['entry_type'] == 'book':
-                    if data2['author']== '' and data2['editor'] == '':
-                        context['err'] = True
-                        context['errmessage'] = "Fill in either Author or Editor"
-                        return render(request, 'records/record_conflict.html', context)
-                elif data1['entry_type'] == 'inbook':
-                    if data2['author'] == '' and data2['editor'] == '':
-                        context['err'] = True
-                        context['errmessage'] = "Fill in either Author or Editor"
-                        return render(request, 'records/record_conflict.html', context)
-                    elif data2['chapter'] == '' and data2['pages'] == '':
-                        context['err'] = True
-                        context['errmessage'] = "Fill in either Chapter or Pages"
-                        return render(request, 'records/record_conflict.html', context)
-                # form is valid - Save.
-                record = models.Record()
-                record.entry_type = data1['entry_type']
-                record.cite_key = data1['cite_key']
-                record.project = project
-                for fieldname in fields:
-                    if fieldname in data2:
-                        setattr(record, fieldname, data2[fieldname])
-                record.save()
-                # Send user back to project detail, the overview of all records in the project.
-                return redirect('projects:single', slug=slug)
-            else:
-                # Form invalid
-                context['err'] = True
-                return render(request, 'records/record_conflict.html', context)
-        else:
-            # Access denied
             return HttpResponse("You don't have the permission to do this")
