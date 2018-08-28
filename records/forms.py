@@ -54,7 +54,7 @@ class ShowRecordForm(forms.ModelForm):
         super().__init__(*args,**kwargs)
         self.fields['entry_type'].widget.attrs['readonly'] = True
         self.fields['cite_key'].widget.attrs['readonly'] = True
-        self.fields['entry_type'].widget.attrs.update({'class': 'form_select'})
+        self.fields['entry_type'].widget.attrs.update({'class': 'form_select', 'id':'entry_type_2'})
         for fieldname in ENTRY_TYPE_FIELDS[entry][0]:
             self.fields[fieldname] = forms.CharField()
             self.fields[fieldname].required = True

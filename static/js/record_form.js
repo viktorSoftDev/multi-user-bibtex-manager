@@ -19,6 +19,7 @@ function get_form(){
   }
 };
   $(document).ready(function(){
+    get_form();
     $('#id_entry_type').change(function(){
       get_form();
     });

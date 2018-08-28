@@ -16,10 +16,15 @@
         <span class="card-title">
           <h5 class="center-align">Enter a new Cite Key and make any other changes before saving!</h5>
         </span>
-        <form id="record_form" class="" action="{% url 'projects:records:create' slug=project.slug %}" method="POST">
+        <form id="record_form" class="" action="{% url 'projects:records:clone' slug=project.slug pk=record.pk %}" method="POST">
           {% csrf_token %}
           {% form form=form1 %}{% endform %}
+          {% if errmessage %}
+            <p class="red-text darken-1 center-align">{{ errmessage }}</p>
+          {% endif %}
+        <div id="form2div">
           {% form form=form2 %}{% endform %}
+        </div>
           <div class="center-align">
             <button type="submit" name="_submit" class="btn btn-large waves-effect waves-light indigo">Create record</button>
 
@@ -30,4 +35,10 @@
   </div>
 </div>
 <script type="text/javascript" src="{% static 'js/select.js' %}"></script>
+<script type="text/javascript">
+  // This variable needs to be here, since django's template tags do not work in separate files.
+  url_string = "{% url 'projects:records:specific-form-ajax' slug=project.slug %}"
+</script>
+
+<script type="text/javascript" src="{% static 'js/record_form.js' %}"></script>
 {% endblock %}

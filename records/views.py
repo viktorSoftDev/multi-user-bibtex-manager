@@ -69,17 +69,44 @@ def clone_record(request, slug, pk):
                 # User has submitted the form.
                 form1 = forms.GeneralRecordForm(request.POST)
                 form2 = forms.SpecificRecordForm(request.POST, entry=request.POST['entry_type'])
+                context = {
+                    'form1':form1,
+                    'project':project,
+                    'form2':form2,
+                    'record':record,
+                }
                 if form1.is_valid() and form2.is_valid():
-                    # Save data in a new record
+                    fields = [f.name for f in models.Record._meta.get_fields()]
                     data1 = form1.clean()
                     data2 = form2.clean()
+                    # Additional form validation.
+                    if data1['entry_type'] == 'book':
+                        if data2['author']== '' and data2['editor'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Author or Editor"
+                            return render(request, 'records/record_copy.html', context)
+                    elif data1['entry_type'] == 'inbook':
+                        if data2['author'] == '' and data2['editor'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Author or Editor"
+                            return render(request, 'records/record_copy.html', context)
+                        elif data2['chapter'] == '' and data2['pages'] == '':
+                            context['err'] = True
+                            context['errmessage'] = "Fill in either Chapter or Pages"
+                            return render(request, 'records/record_copy.html', context)
+                    # Save data in a new record
                     record.entry_type = data1['entry_type']
                     record.cite_key = data1['cite_key']
                     record.last_edited = timezone.now()
                     record.save()
                     # Send user back to project detail, the overview of all records in the project.
                     return redirect('projects:single', slug=slug)
+                else:
+                    # form is not valid
 
+                    context['err'] = True
+                    return render(request, 'records/record_copy.html', context)
+                # Send user back to project detail, the overview of all records in the project.
             else:
                 # Form is filled in with the data from previous record
                 form1 = forms.GeneralRecordForm(data=model_to_dict(record))
@@ -220,7 +247,7 @@ def edit_record(request, slug, pk):
                             return render(request, 'records/record_edit.html', context)
                     # Form is valid .. save into new record
                     # making sure no one has edited the record while session is running
-                    if record.last_edited.__str__() != request.COOKIES.get('last_edited'):
+                    if record.last_edited.__str__() == request.COOKIES.get('last_edited'):
                         # No conflict, go on save changes.
                         record.entry_type = data1['entry_type']
                         record.cite_key = data1['cite_key']

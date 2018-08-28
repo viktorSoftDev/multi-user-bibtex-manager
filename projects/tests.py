@@ -142,7 +142,7 @@ class ProjectListPageTests(TestCase):
         # See how many records there are in the project
         self.assertIn(b'"Records">10', response.content)
         # see that the user can go to the specific project
-        self.assertIn(b'<a href="/projects/fake_title/"', response.content)
+        self.assertIn(b'<a href="/projects/fake_title3/"', response.content)
         # see that the user can go to create a new project
         self.assertIn(b'<a href="/projects/new/"', response.content)
 

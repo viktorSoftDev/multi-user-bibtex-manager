@@ -25,7 +25,10 @@ class Project(models.Model):
         return self.project_title
 
     def save(self, *args, **kwargs):
-        i = Project.objects.latest('pk').pk + 1
+        if Project.objects.all().count() == 0: # in case it is the first project ever created.
+            i = 1
+        else:
+            i = Project.objects.latest('pk').pk + 1
         while Project.objects.filter(slug=slugify(self.project_title + str(i))).count() != 0:
             i = i + 1
         self.slug = slugify(self.project_title + str(i))

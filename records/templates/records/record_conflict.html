@@ -58,7 +58,8 @@
 
 
                 {% csrf_token %}
-                {% form form=data %}{% endform %}
+                {% form form=data %}
+                {% endform %}
 
               </form>
             </div>
@@ -77,7 +78,14 @@
             </div>
             <hr>
             {% form form=form1 %}{% endform %}
-            {% form form=form %}{% endform %}
+
+                {% if errmessage %}
+                  <p class="red-text darken-1 center-align">{{ errmessage }}</p>
+                {% endif %}
+            <div id="form2div">
+                {% form form=form %}{% endform %}<!-- Here comes the specific form through ajax. -->
+            </div>
+
             <input id="new_or_both" hidden type="text" name="keep" value="NEW">
           </form>
         </div>  </div>  </div>
@@ -91,5 +99,12 @@
 
 
 <script type="text/javascript" src="{% static 'js/conflict.js' %}"></script>
+
+<script type="text/javascript">
+  // This variable needs to be here, since django's template tags do not work in separate files.
+  url_string = "{% url 'projects:records:specific-form-ajax' slug=project.slug %}"
+</script>
+
+
 
 {% endblock %}
